@@ -1,4 +1,4 @@
-# Table of Contents
+# Table of contents
 
 * [Welcome to SparqNet Docs](README.md)
 * [Introducing SparqNet](introducing-sparqnet/README.md)
