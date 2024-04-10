@@ -20,8 +20,8 @@ Michael has a background building startups mostly in the internet services indus
 
 “I had a few years working at Microsoft bringing Microsoft cloud and hardware to the market. I have also been an early adopter of cryptocurrency since the very early days of Bitcoin when you could mine it with a CPU,” Michael revealed.
 
-“We saw the opportunity to build the AVME initial core within the Avalanche Summit Hackathon 2022,” says Itamar. “After concluding it and noticing the superb performance we were achieving with a pre-alpha prototype, we realized that this core could be open to everyone else and thus Sparq (_now SparqNet_) was born.”
+“We saw the opportunity to build the AVME initial core within the Avalanche Summit Hackathon 2022,” says Itamar. “After concluding it and noticing the superb performance we were achieving with a pre-alpha prototype, we realized that this core could be open to everyone else and thus Sparq (*now SparqNet*) was born.”
 
-“We were building very similar things. Itamar needed flexibility for infrastructure that existed in web2, and I needed speed for building real-world products/services on-chain,” Michael explains. “We merged our frameworks knowing that if we needed such architecture, there were definitely others out there that needed it too — and it turns out, we were right!”
+“We were building very similar things. Itamar needed flexibility for infrastructure that existed in Web2, and I needed speed for building real-world products/services on-chain”, Michael explains. “We merged our frameworks knowing that if we needed such architecture, there were definitely others out there that needed it too — and it turns out, we were right!”
 
 Learn more about SparqNet's journey in [this founders' AMA](https://medium.com/@SparqNet/meet-the-founders-who-are-the-people-behind-sparqnet-ef21e0751e55).
