@@ -2,9 +2,9 @@
 
 * [Welcome to SparqNet Docs](README.md)
 * [Introducing SparqNet](introducing-sparqnet/README.md)
-  * [The Problem](introducing-sparqnet/the-problem.md)
-  * [The Solution](introducing-sparqnet/the-solution.md)
-  * [Potential Use Cases](introducing-sparqnet/potential-use-cases.md)
+  * [A Primer on Smart Contracts](introducing-sparqnet/a-primer-on-smart-contracts.md)
+  * [The Problem With EVMs](introducing-sparqnet/the-problem-with-evms.md)
+  * [What is SparqNet?](introducing-sparqnet/what-is-sparqnet.md)
   * [Meet the Founders](introducing-sparqnet/meet-the-founders.md)
 * [How SparqNet works](how-sparqnet-works/README.md)
   * [Validators](how-sparqnet-works/validators.md)
