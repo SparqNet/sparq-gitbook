@@ -590,7 +590,7 @@ We have successfully coded our contract, but in order to deploy and call it, we 
 
 Let's go back to the `ContractManager` implementation files:
 
-<figure><img src="../.gitbook/assets/ContractManager (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/ContractManager (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Open `contractmanager.h` and add two private functions to it:
 

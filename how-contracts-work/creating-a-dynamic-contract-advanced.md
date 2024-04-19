@@ -395,7 +395,7 @@ void ERC20Wrapper::registerContractFunctions() {
 
 Once your contract is done, you need to register it within the `ContractManager` class itself. In order to do this, two functions have to be added to it, and the `ethCall()` functions and its constructor have to be modified. Let's go back to `src/contract/contractmanager.h` and `src/contract/contractmanager.cpp`:
 
-<figure><img src="../.gitbook/assets/ContractManager (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/ContractManager (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 First, in `contractmanager.h` let's declare two new _private_ functions within `ContractManager`, both taking `ethCallInfo` as an argument. The first function should create a new instance of the contract, and the second function should verify if the call to create the contract is valid.
 

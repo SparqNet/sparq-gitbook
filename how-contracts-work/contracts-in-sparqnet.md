@@ -35,7 +35,7 @@ OrbiterSDK offers two types of contracts: **Dynamic Contracts** and **Protocol C
 
 #### The ContractManager class
 
-<figure><img src="../.gitbook/assets/ContractManager (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/ContractManager (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The `ContractManager` class (declared in `src/contract/contractmanager.h`) is a _Protocol Contract_, responsible for:
 

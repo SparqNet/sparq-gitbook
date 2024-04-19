@@ -30,7 +30,7 @@ Dynamic Contracts specifically must:
 
 * Inherit `DynamicContract` from `src/contract/dynamiccontract.h`:
 
-<figure><img src="../.gitbook/assets/DynamicContract.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/DynamicContract (1).png" alt=""><figcaption></figcaption></figure>
 
 * Override `registerContractFunctions()` and call it inside the contract's constructor
 * Provide two constructors: one for creating the contract from scratch within `ContractManager`, and one for loading the contract from the database
