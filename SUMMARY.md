@@ -1,5 +1,6 @@
 # Table of contents
 
+* [Test](test.md)
 * [Welcome to SparqNet Docs](README.md)
 * [Introducing SparqNet](introducing-sparqnet/README.md)
   * [A Primer on Smart Contracts](introducing-sparqnet/a-primer-on-smart-contracts.md)
