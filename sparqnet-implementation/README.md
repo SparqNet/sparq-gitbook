@@ -1,5 +1,5 @@
 ---
-description: How the functional elements of OrbiterSDK interact with each other.
+description: How the functional elements of SparqNet interact
 ---
 
 # OrbiterSDK implementation

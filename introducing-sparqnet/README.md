@@ -1,5 +1,5 @@
 ---
-description: A quick introduction to what SparqNet does and what it's meant to solve
+description: A quick introduction to what SparqNet does
 ---
 
 # Introducing SparqNet

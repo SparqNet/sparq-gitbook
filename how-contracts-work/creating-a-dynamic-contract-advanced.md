@@ -1,16 +1,18 @@
+---
+description: A walkthrough on a more advanced Dynamic Contract usage.
+---
+
 # Creating a Dynamic Contract (Advanced)
 
-Let's create a simple Dynamic Contract that can be used for depositing and withdrawing ERC20 tokens. This subchapter assumes you went through [3.4](https://github.com/SparqNet/sparq-docs/blob/main/Sparq\_en-US/ch3/3-4.md) first, as most of the heavy explanations were done there.
+Let's create another Dynamic Contract that can be used for depositing and withdrawing ERC20 tokens. This subchapter assumes you went through the previous (Simple) one first, as most of the heavy explanations are there.
 
-This example uses an already existing contract within the project - the `ERC20Wrapper` contract. This is due to the fact that `ERC20Wrapper` is a very simple contract, while it shows differences between Solidity and OrbiterSDK contracts when calling other contracts. Check the `src/contract/erc20wrapper.h` and `src/contract/erc20wrapper.cpp` files for reference:
-
-<figure><img src="../.gitbook/assets/AdvancedContract.png" alt=""><figcaption></figcaption></figure>
+This example uses an already existing contract within the project - the `ERC20Wrapper` contract. This is due to the fact that `ERC20Wrapper` is a very simple contract, while it shows differences between Solidity and OrbiterSDK contracts when calling other contracts. For reference, check the `erc20wrapper.h` and `erc20wrapper.cpp` files in `src/contract/templates`.
 
 ### Solidity Example
 
 We'll be using the following Solidity code as a reference:
 
-```
+```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8;
 
@@ -50,449 +52,259 @@ contract ERC20Wrapper {
 }
 ```
 
-#### Step 1 - Creating the files
+### Creating the files
 
-In order to recreate this contract, first we need to create the header and source files for it (`erc20wrapper.h` and `erc20wrapper.cpp`, as stated above), then add both files to the `CMakeLists.txt` file inside the same folder:
+Create the header and source files (`erc20wrapper.h` and `erc20wrapper.cpp`, as stated above) and add them to `CMakeLists.txt`:
 
-```
+```cmake
 set(CONTRACT_HEADERS
-  ...
-  ${CMAKE_SOURCE_DIR}/src/contract/erc20wrapper.h
-  ...
+  # ...
+  ${CMAKE_SOURCE_DIR}/src/contract/templates/erc20wrapper.h
+  # ...
 )
 set(CONTRACT_SOURCES
-  ...
-  ${CMAKE_SOURCE_DIR}/src/contract/erc20wrapper.cpp
-  ...
+  # ...
+  ${CMAKE_SOURCE_DIR}/src/contract/templates/erc20wrapper.cpp
+  # ...
 )
 ```
 
-#### Step 2 - Creating the contract header
+### Creating the contract header and registering
 
-Inside `erc20wrapper.h`, let's implement the header:
+Inside `erc20wrapper.h`, let's implement the header (comments were taken out so it's easier to read):
 
-```
+```cpp
+#ifndef ERC20WRAPPER_H
+#define ERC20WRAPPER_H
+
+#include <memory>
+#include <tuple>
+
+#include "../../utils/db.h"
+#include "../abi.h"
+#include "../contractmanager.h"
+#include "../dynamiccontract.h"
+#include "../variables/safeunorderedmap.h"
+#include "erc20.h"
+
 class ERC20Wrapper : public DynamicContract {
   private:
-    // ERC20 Address => UserAddress/UserBalance
-    // mapping(address => mapping(address => uint256)) internal _tokensAndBalances;
-    SafeUnorderedMap<Address,std::unordered_map<Address, uint256_t, SafeHash>> _tokensAndBalances;
+    SafeUnorderedMap<Address, std::unordered_map<Address, uint256_t, SafeHash>> tokensAndBalances_;
 
-    // Override this to register your contract's own functions.
     void registerContractFunctions() override;
 
   public:
-    // Constructor for building a new contract from scratch.
+    using ConstructorArguments = std::tuple<>;
+
     ERC20Wrapper(
-      ContractManager::ContractManagerInterface &interface,
-      const Address& address,
-      const Address& creator,
-      const uint64_t& chainId,
-      const std::unique_ptr<DB> &db
-    );
-    
-    // Constructor for loading the contract from the database.
-    ERC20Wrapper(
-      ContractManager::ContractManagerInterface &interface,
-      const Address& contractAddress,
-      const std::unique_ptr<DB> &db
+      ContractManagerInterface& interface,
+      const Address& contractAddress, const std::unique_ptr<DB>& db
     );
 
-    // Destructor. Override this to save all your state variables.
+    ERC20Wrapper(
+      ContractManagerInterface& interface,
+      const Address& address, const Address& creator,
+      const uint64_t& chainId, const std::unique_ptr<DB>& db
+    );
+
     ~ERC20Wrapper() override;
 
-    // function getContractBalance(address _token) public view returns (uint256) { return _tokensAndBalances[_token][address(this)]; }
-    std::string getContractBalance(const Address& token) const;
+    uint256_t getContractBalance(const Address& token) const;
 
-    // function getUserBalance(address _token, address _user) public view returns (uint256) { return _tokensAndBalances[_token][_user]; }
-    std::string getUserBalance(const Address& token, const Address& user) const;
+    uint256_t getUserBalance(const Address& token, const Address& user) const;
 
-    // function withdraw (address _token, uint256 _value) public returns (bool)
     void withdraw(const Address& token, const uint256_t& value);
 
-    // function transferTo(address _token, address _to, uint256 _value) public returns (bool)
     void transferTo(const Address& token, const Address& to, const uint256_t& value);
 
-    // function deposit(address _token, uint256 _value) public returns (bool)
     void deposit(const Address& token, const uint256_t& value);
+
+    static void registerContract() {
+      ContractReflectionInterface::registerContractMethods<
+        ERC20Wrapper, ContractManagerInterface&,
+        const Address&, const Address&, const uint64_t&,
+        const std::unique_ptr<DB>&
+      >(
+        std::vector<std::string>{},
+        std::make_tuple("getContractBalance", &ERC20Wrapper::getContractBalance, FunctionTypes::View, std::vector<std::string>{"token"}),
+        std::make_tuple("getUserBalance", &ERC20Wrapper::getUserBalance, FunctionTypes::View, std::vector<std::string>{"token", "user"}),
+        std::make_tuple("withdraw", &ERC20Wrapper::withdraw, FunctionTypes::NonPayable, std::vector<std::string>{"token", "value"}),
+        std::make_tuple("transferTo", &ERC20Wrapper::transferTo, FunctionTypes::NonPayable, std::vector<std::string>{"token", "to", "value"}),
+        std::make_tuple("deposit", &ERC20Wrapper::deposit, FunctionTypes::NonPayable, std::vector<std::string>{"token", "value"})
+      );
+    }
 };
+
+#endif // ERC20WRAPPER_H
 ```
 
-Here, we recreated the contract's functions but also added a few extra functions (explained on the previous sections). In short:
+Here, we recreated the contract's functions but also added a few extra functions (explained on the previous sections). In short, we create:
 
-* We create two constructors - one for creating the contract from scratch, and another for loading it from the database
-* We override the `registerContractFunctions()` function
-* We override the destructor
-* We use private SafeVariables (in this case, `SafeUnorderedMap`) to handle the contract's actual variables
+* Two constructors - one for creating the contract from scratch, and another for loading it from the database - and the destructor
+* The `ConstructorArguments` tuple, `registerContract()` and `registerContractFunctions()` functions for proper contract registering (notice that the tuple is required, even though it's empty)
+* Private SafeVariables (in this case, `SafeUnorderedMap`) to handle the contract's variables
+* The contract's functions according to the Solidity signatures
 
-#### Step 3 - Implementing the contract constructors and destructor
+Like in SimpleContract's case, you must include your contract's header in `customcontracts.h` to register it, and check it's set to generate its ABI through `main-contract-abi.cpp`. In this specific case for `ERC20Wrapper`, it's assumed that both steps are already done, but it's good to check again just in case.
 
-Inside `erc20wrapper.cpp`, let's implement both constructors:
+### Implementing the contract constructors and destructor
 
-```
-// Create the contract on the spot
-ERC20Wrapper::ERC20Wrapper(
-  ContractManager::ContractManagerInterface &interface,
-  const Address& address,
-  const Address& creator,
-  const uint64_t& chainId,
-  const std::unique_ptr<DB> &db
-) : DynamicContract(interface, "ERC20Wrapper", address, creator, chainId, db), _tokensAndBalances(this) {
-  registerContractFunctions();
-  updateState(true);
-}
+Inside `erc20wrapper.cpp`, let's implement both constructors and the destructor:
 
-// Load the contract directly from the database
-ERC20Wrapper::ERC20Wrapper(
-  ContractManager::ContractManagerInterface &interface,
-  const Address& contractAddress,
-  const std::unique_ptr<DB> &db
-) : DynamicContract(interface, contractAddress, db), _tokensAndBalances(this) {
-  auto tokensAndBalances = this->db->getBatch(
-    DBPrefix::contracts + this->getContractAddress().get() + "_tokensAndBalances"
-  );
+```cpp
+#include "erc20wrapper.h"
+
+EERC20Wrapper::ERC20Wrapper(
+  ContractManagerInterface& interface, const Address& contractAddress, DB& db
+) : DynamicContract(interface, contractAddress, db), tokensAndBalances_(this)
+{
+  auto tokensAndBalances = this->db_.getBatch(this->getNewPrefix("tokensAndBalances_"));
   for (const auto& dbEntry : tokensAndBalances) {
-    this->_tokensAndBalances[Address(dbEntry.key, true)][Address(dbEntry.value.substr(0, 20), true)] = Utils::fromBigEndian<uint256_t>(dbEntry.value.substr(20));
+    BytesArrView valueView(dbEntry.value);
+    this->tokensAndBalances_[Address(dbEntry.key)][Address(valueView.subspan(0, 20))] = Utils::fromBigEndian<uint256_t>(valueView.subspan(20));
   }
+
+  this->tokensAndBalances_.commit();
+
   registerContractFunctions();
-  updateState(true);
+
+  this->tokensAndBalances_.enableRegister();
 }
-```
 
-The first constructor will create a new contract from scratch, as there is no previous existing contract to load. Because of that, you are required to initialize _all_ the variables of your contract by hand (address, name, etc.), within the `DynamicContract` constructor (notice that your contract's name - "ERC20Wrapper" - is the same as your contract's class name - `ERC20Wrapper` - this match is _mandatory_, otherwise a segfault will happen).
+ERC20Wrapper::ERC20Wrapper(
+  ContractManagerInterface& interface, const Address& address, const Address& creator, const uint64_t& chainId, DB& db
+) : DynamicContract(interface, "ERC20Wrapper", address, creator, chainId, db), tokensAndBalances_(this)
+{
+  this->tokensAndBalances_.commit();
 
-The second constructor will load the contract variables (address, name, etc.) from the database by itself, but you are required to load the variables of your contract on your own from there as well. Use `DBPrefix::contract + this->getContractAddress()` as the prefix for the database key.
+  registerContractFunctions();
 
-Both constructors have to call `registerContractFunctions()` as well as `updateState(true)` at the end. Those will be explained further.
+  this->tokensAndBalances_.enableRegister();
+}
 
-Now, let's implement the destructor, which is responsible for saving the current information within the contract back to the database:
-
-```
 ERC20Wrapper::~ERC20Wrapper() {
   DBBatch tokensAndBalancesBatch;
-  for (auto it = _tokensAndBalances.cbegin(); it != _tokensAndBalances.cend(); it++) {
-    for (auto it2 = it->second.cbegin(); it2 != it->second.cend(); it2++) {
-      std::string key = it->first.get();
-      std::string value;
-      value += it2->first.get();
-      value += Utils::uintToBytes(it2->second);
-      tokensAndBalancesBatch.puts.emplace_back(DBEntry(key, value));
+  for (auto it = tokensAndBalances_.cbegin(); it != tokensAndBalances_.cend(); ++it) {
+    for (auto it2 = it->second.cbegin(); it2 != it->second.cend(); ++it2) {
+      const auto& key = it->first.get();
+      Bytes value = it2->first.asBytes();
+      Utils::appendBytes(value, Utils::uintToBytes(it2->second));
+      tokensAndBalancesBatch.push_back(key, value, this->getNewPrefix("tokensAndBalances_"));
     }
   }
-  this->db->putBatch(tokensAndBalancesBatch, DBPrefix::contracts + this->getContractAddress().get() + "_tokensAndBalances");
-  return;
+  this->db_.putBatch(tokensAndBalancesBatch);
 }
 ```
 
-Keep in mind that, for the prefix of the database, we use `DBPrefix::contracts + this->getContractAddress().get() + "_tokensAndBalances"`. This is the same prefix that we used on the constructor to load the contract variables from the database.
+One constructor will create a new contract from scratch, as there is no previous existing contract to load, while the other will load the contract from the database when it already exists there. On both cases you are required to initialize, commit and enable registering for _all_ the variables of your contract by hand within the `DynamicContract` constructor, as well as calling `registerContractFunctions()`, all in the same order as explained in the previous subchapter. The destructor on the other hand is responsible for saving the current information within the contract back to the database.
 
-#### Step 4 - Implementing the contract functions
+Notice that your contract's name ("ERC20Wrapper") is the same as your contract's class name (`ERC20Wrapper`) - again, just like with SimpleContract, this match is **mandatory**, otherwise a segfault will happen. `getNewPrefix()` does the same as `getDBPrefix()`, but with a user-defined string appended to it, so this would be equivalent to `DBPrefix::contracts` + the contract's address + `tokensAndBalances_`.
 
-This step is pretty straightforward - _view_ functions should be `const` and return a `std::string` with the ABI encoded result, while _non-view/callable_ functions should be non-`const` and return `void`:
+### Implementing the contract functions
 
-```
-// view function
-std::string ERC20Wrapper::getContractBalance(const Address& token) const {
-  auto* ERC20Token = this->getContract<ERC20>(token);
-  return ERC20Token->balanceOf(this->getContractAddress());
+This step is pretty straightforward, we just follow the rules explained in previous subchapters:
+
+```cpp
+uint256_t ERC20Wrapper::getContractBalance(const Address& token) const {
+  return this->callContractViewFunction(token, &ERC20::balanceOf, this->getContractAddress());
 }
 
-// view function
-std::string ERC20Wrapper::getUserBalance(const Address& token, const Address& user) const {
-  auto it = this->_tokensAndBalances.find(token);
-  if (it == this->_tokensAndBalances.end()) return ABI::Encoder({0}).getRaw();
+uint256_t ERC20Wrapper::getUserBalance(const Address& token, const Address& user) const {
+  auto it = this->tokensAndBalances_.find(token);
+  if (it == this->tokensAndBalances_.end()) {
+    return 0;
+  }
   auto itUser = it->second.find(user);
-  if (itUser == it->second.end()) return ABI::Encoder({0}).getRaw();
-  return ABI::Encoder({itUser->second}).getRaw();
+  if (itUser == it->second.end()) {
+    return 0;
+  }
+  return itUser->second;
 }
 
-// callable function
 void ERC20Wrapper::withdraw(const Address& token, const uint256_t& value) {
-  auto it = this->_tokensAndBalances.find(token);
-  if (it == this->_tokensAndBalances.end()) throw std::runtime_error("Token not found");
+  auto it = this->tokensAndBalances_.find(token);
+  if (it == this->tokensAndBalances_.end()) throw std::runtime_error("Token not found");
   auto itUser = it->second.find(this->getCaller());
   if (itUser == it->second.end()) throw std::runtime_error("User not found");
-  if (itUser->second <= value) throw std::runtime_error("Not enough balance");
+  if (itUser->second <= value) throw std::runtime_error("ERC20Wrapper: Not enough balance");
   itUser->second -= value;
-  ABI::Encoder encoder({this->getCaller(), value}, "transfer(address,uint256)");
-  this->callContract(token, encoder);
+  this->callContractFunction(token, &ERC20::transfer, this->getCaller(), value);
 }
 
-// callable function
 void ERC20Wrapper::transferTo(const Address& token, const Address& to, const uint256_t& value) {
-  auto it = this->_tokensAndBalances.find(token);
-  if (it == this->_tokensAndBalances.end()) throw std::runtime_error("Token not found");
+  auto it = this->tokensAndBalances_.find(token);
+  if (it == this->tokensAndBalances_.end()) throw std::runtime_error("Token not found");
   auto itUser = it->second.find(this->getCaller());
   if (itUser == it->second.end()) throw std::runtime_error("User not found");
-  if (itUser->second <= value) throw std::runtime_error("Not enough balance");
+  if (itUser->second <= value) throw std::runtime_error("ERC20Wrapper: Not enough balance");
   itUser->second -= value;
-  ABI::Encoder encoder({to, value}, "transfer(address,uint256)");
-  this->callContract(token, encoder);
+  this->callContractFunction(token, &ERC20::transfer, to, value);
 }
 
-// callable function
 void ERC20Wrapper::deposit(const Address& token, const uint256_t& value) {
-  ABI::Encoder encoder({this->getCaller(), this->getContractAddress(), value}, "transferFrom(address,address,uint256)");
-  this->callContract(token, encoder);
-  this->_tokensAndBalances[token][this->getCaller()] += value;
+  this->callContractFunction(token, &ERC20::transferFrom, this->getCaller(), this->getContractAddress(), value);
+  this->tokensAndBalances_[token][this->getCaller()] += value;
 }
 ```
 
-Keep in mind that, for the prefix of the database, we use `DBPrefix::contracts + this->getContractAddress().get() + "_tokensAndBalances"`. This is the same prefix that we used on the constructor to load the contract variables from the database.
+#### Calling functions from another contract
 
-#### Step 4 - Creating the contract functions
+Notice that, in the example above, some functions are calling functions from another contract. This is done by calling `callContractViewFunction()` (**for view functions**) and `callContractFunction()`(**for non-view/callable functions**), both of which require the following arguments:
 
-This step is pretty straightforward - functions that are callable by a transaction should be non-`const` and return `void`, while view functions should be `const` and return a `std::string` with the ABI encoded result. Check the following examples:
+* The other contract's address (in this case, `token`)
+* A reference to the function that will be called - in this case:
+  * `getContractBalance()` calls `ERC20::balanceOf()`
+  * `withdraw()` and `transferTo()` call `ERC20::transfer()`
+  * `deposit()` calls`ERC20::transferFrom()`
+* The function's arguments, if there's any - in this case:
+  * `ERC20::balanceOf()` will receive our contract's own address as `getContractAddress()`
+  * `ERC20::transfer()` will receive the receiver address as `to` or `getCaller()`, and the value to be transferred as `value`
+  * `ERC20::transferFrom()` will receive the sender's address as `getCaller()`, the receiver's address as `getContractAddress()`, and the value to be transferred as `value`
 
-```
-// view function
-std::string ERC20Wrapper::getContractBalance(const Address& token) const {
+Alternatively, _for view functions specifically_, you can get a pointer to the other contract with `getContract()` and call the function directly from it, passing along any required arguments. The `getContract()` function itself is automatically protected in the case of casting a wrong typed contract or calling an inexistent contract. So the implementation of `getContractBalance()` could also be done like this:
+
+```cpp
+uint256_t ERC20Wrapper::getContractBalance(const Address& token) const {
   auto* ERC20Token = this->getContract<ERC20>(token);
   return ERC20Token->balanceOf(this->getContractAddress());
-}
-
-// view function
-std::string ERC20Wrapper::getUserBalance(const Address& token, const Address& user) const {
-  auto it = this->_tokensAndBalances.find(token);
-  if (it == this->_tokensAndBalances.end()) return ABI::Encoder({0}).getRaw();
-  auto itUser = it->second.find(user);
-  if (itUser == it->second.end()) return ABI::Encoder({0}).getRaw();
-  return ABI::Encoder({itUser->second}).getRaw();
-}
-
-// callable function
-void ERC20Wrapper::withdraw(const Address& token, const uint256_t& value) {
-  auto it = this->_tokensAndBalances.find(token);
-  if (it == this->_tokensAndBalances.end()) throw std::runtime_error("Token not found");
-  auto itUser = it->second.find(this->getCaller());
-  if (itUser == it->second.end()) throw std::runtime_error("User not found");
-  if (itUser->second <= value) throw std::runtime_error("Not enough balance");
-  itUser->second -= value;
-  ABI::Encoder encoder({this->getCaller(), value}, "transfer(address,uint256)");
-  this->callContract(token, encoder);
-}
-
-// callable function
-void ERC20Wrapper::transferTo(const Address& token, const Address& to, const uint256_t& value) {
-  auto it = this->_tokensAndBalances.find(token);
-  if (it == this->_tokensAndBalances.end()) throw std::runtime_error("Token not found");
-  auto itUser = it->second.find(this->getCaller());
-  if (itUser == it->second.end()) throw std::runtime_error("User not found");
-  if (itUser->second <= value) throw std::runtime_error("Not enough balance");
-  itUser->second -= value;
-  ABI::Encoder encoder({to, value}, "transfer(address,uint256)");
-  this->callContract(token, encoder);
-}
-
-// callable function
-void ERC20Wrapper::deposit(const Address& token, const uint256_t& value) {
-  ABI::Encoder encoder({this->getCaller(), this->getContractAddress(), value}, "transferFrom(address,address,uint256)");
-  this->callContract(token, encoder);
-  this->_tokensAndBalances[token][this->getCaller()] += value;
-}
-```
-
-#### Step 5 - Calling functions from other contracts
-
-**View functions**
-
-In order to call another contract's view function, you can get a pointer to it using the global `getContract()` function. It is automatically protected in the case of casting a wrong typed contract or calling an inexistent contract, and returns a `std::string` with the respective ABI encoded result:
-
-```
-std::string ERC20Wrapper::getContractBalance(const Address& token) const {
-  auto* ERC20Token = this->getContract<ERC20>(token);
-  return ERC20Token->balanceOf(this->getContractAddress());
-}
-```
-
-**Non-view/Callable functions**
-
-In order to call a non-view/callable function, you need to use the `callContract()` function. You must encode the ABI of the function you want to call - in this example, we are calling the `transferFrom` function from another ERC20 contract, which is encoded as `transferFrom(address,address,uint256)`, and its parameters are the caller, the contract address and the value, respectively, encoded as `{this->getCaller(), this->getContractAddress(), value}`:
-
-```
-void ERC20Wrapper::deposit(const Address& token, const uint256_t& value) {
-  ABI::Encoder encoder({this->getCaller(), this->getContractAddress(), value}, "transferFrom(address,address,uint256)");
-  this->callContract(token, encoder);
-  this->_tokensAndBalances[token][this->getCaller()] += value;
 }
 ```
 
 As this contract is consuming the ERC20 balance of another contract, you first need to approve the contract to spend the tokens. This can be done in the same manner as Solidity.
 
-#### Step 6 - Registering the contract's functions
+#### Creating contracts on the fly
 
-Once we're done with implementing the contract, we need to override `registerContractFunction()` with the proper functions for them to be registered and able to be called by an RPC `eth_call` or a transaction. This is done by calling the following functions on the derived contract:
+As a bonus, it's possible for a Dynamic Contract to create another Dynamic Contract, with the `callCreateContract()` function. That way you can have, for example, a function that creates another contract on the fly and retrieve its address (see below), but this is also useful for more advanced things like contract factories, where you can have a templated function that creates contracts on the fly based on the type and parameters passed to it.
 
+The function should be used like this:
+
+```cpp
+Address contract = this->callCreateContract<ERC20>(this->getContractAddress(), 0, 0, 0, "TestToken", "TST", 18, 1000000000000000000);
 ```
-void registerFunction(const std::string& functor, std::function<void(const ethCallInfo& tx)> f);
-void registerPayableFunction(const std::string& functor, std::function<void(const ethCallInfo& tx)> f);
-void registerViewFunction(const std::string& functor, std::function<std::string(const ethCallInfo& str)> f);
-```
 
-Each function should be used for their effective purpose:
+This creates a new `ERC20` contract with the respective parameters:
 
-* `registerFunction()` is used to register a _callable_ function (a function that is called by a transaction)
-* `registerPayableFunction()` is used to register a _callable_ AND _payable_ function
-* `registerViewFunction()` is used to register a _view_ function
+* The caller address, in this case our own contract's address as `this->getContractAddress()`
+* The gas value, in this case `0`
+* The gas price value, also `0`
+* The caller/transaction value, again, `0`
+* The new contract's constructor parameters, in this case an `ERC20` contract needs the token name (`"TestToken"`), its ticker (`"TST"`), number of decimals (`18`), and the amount of tokens that will be minted at creation (`1000000000000000000`, which equals exactly 1 TST with 18 decimals)
 
-The `functor` argument should be the function signature by Solidity standards, as in:
+### Registering the contract's functions
 
-* `getContractBalance(address token)` -> `keccak256("getContractBalance(address)").substr(0,4)` -> `0x43ab265f`
-* `getUserBalance(address token, address user)` -> `keccak256("getUserBalance(address,address)").substr(0,4)` -> `0x6805d6ad`
-* And so on and so forth...
+Once we're done with implementing the contract, we must register it. We've already coded the `ConstructorArguments` tuple and the `registerContract()` function in the header, so all that's left is to override `registerContractFunctions()` so we can register the contract's functions.
 
-The `function` argument should be a lambda function, responsible for parsing the `ethCallInfo` argument and calling the proper function.
-
-`ethCallInfo` is a `std::tuple` with the following information:
-
-| Index | Description                          | Type        |
-| ----- | ------------------------------------ | ----------- |
-| 0     | From (where the call is coming from) | Address     |
-| 1     | To (where the call is going to)      | Address     |
-| 2     | GasLimit                             | uint256\_t  |
-| 3     | GasPrice                             | uint256\_t  |
-| 4     | Value                                | uint256\_t  |
-| 5     | Data                                 | std::string |
-
-You can access each information by using `std::get<index>(ethCallInfo)`, e.g. `std::get<5>(ethCallInfo)` will get the data itself. Then, `data.substr(0,4)` will be the function signature and the remaining data will be the ABI encoded parameters.
-
-We provide an [ABI namespace](https://github.com/SparqNet/orbitersdk-cpp/blob/main/src/contract/abi.h), which contains an encoder and decoder which you can use to encode and/or decode Solidity's ABI strings in order to call a function.
-
-Our implementation would look something like this:
-
-```
+```cpp
 void ERC20Wrapper::registerContractFunctions() {
-  this->registerViewFunction(Hex::toBytes("0x43ab265f"), [this](const ethCallInfo &callInfo) {
-    std::vector<ABI::Types> types = { ABI::Types::address };
-    ABI::Decoder decoder(types, std::get<5>(callInfo).substr(4));
-    return this->getContractBalance(decoder.getData<Address>(0));
-  });
-  this->registerViewFunction(Hex::toBytes("0x6805d6ad"), [this](const ethCallInfo &callInfo) {
-    std::vector<ABI::Types> types = { ABI::Types::address, ABI::Types::address };
-    ABI::Decoder decoder(types, std::get<5>(callInfo).substr(4));
-    return this->getUserBalance(decoder.getData<Address>(0), decoder.getData<Address>(1));
-  });
-  this->registerFunction(Hex::toBytes("0xf3fef3a3"), [this](const ethCallInfo &callInfo) {
-    std::vector<ABI::Types> types = { ABI::Types::address, ABI::Types::uint256 };
-    ABI::Decoder decoder(types, std::get<5>(callInfo).substr(4));
-    this->withdraw(decoder.getData<Address>(0), decoder.getData<uint256_t>(1));
-  });
-  this->registerFunction(Hex::toBytes("0xa5f2a152"), [this](const ethCallInfo &callInfo) {
-    std::vector<ABI::Types> types = { ABI::Types::address, ABI::Types::address, ABI::Types::uint256 };
-    ABI::Decoder decoder(types, std::get<5>(callInfo).substr(4));
-    this->transferTo(decoder.getData<Address>(0), decoder.getData<Address>(1), decoder.getData<uint256_t>(2));
-  });
-  this->registerFunction(Hex::toBytes("0x47e7ef24"), [this](const ethCallInfo &callInfo) {
-    std::vector<ABI::Types> types = { ABI::Types::address, ABI::Types::uint256 };
-    ABI::Decoder decoder(types, std::get<5>(callInfo).substr(4));
-    this->deposit(decoder.getData<Address>(0), decoder.getData<uint256_t>(1));
-  });
-  return;
+  registerContract();
+  this->registerMemberFunction("getContractBalance", &ERC20Wrapper::getContractBalance, FunctionTypes::View, this);
+  this->registerMemberFunction("getUserBalance", &ERC20Wrapper::getUserBalance, FunctionTypes::View, this);
+  this->registerMemberFunction("withdraw", &ERC20Wrapper::withdraw, FunctionTypes::NonPayable, this);
+  this->registerMemberFunction("transferTo", &ERC20Wrapper::transferTo, FunctionTypes::NonPayable, this);
+  this->registerMemberFunction("deposit", &ERC20Wrapper::deposit, FunctionTypes::NonPayable, this);
 }
 ```
 
-#### Step 7 - Registering the contract in ContractManager
+### Compiling and deploying
 
-Once your contract is done, you need to register it within the `ContractManager` class itself. In order to do this, two functions have to be added to it, and the `ethCall()` functions and its constructor have to be modified. Let's go back to `src/contract/contractmanager.h` and `src/contract/contractmanager.cpp`:
-
-<figure><img src="../.gitbook/assets/ContractManager (1) (1).png" alt=""><figcaption></figcaption></figure>
-
-First, in `contractmanager.h` let's declare two new _private_ functions within `ContractManager`, both taking `ethCallInfo` as an argument. The first function should create a new instance of the contract, and the second function should verify if the call to create the contract is valid.
-
-These functions should be called `createNewCONTRACTNAMEContract()` and `validateCreateNewCONTRACTNAMEContract()`, respectively. Replace `CONTRACTNAME` with the name of your contract. In our example, those functions would be aptly named as `createNewERC20WrapperContract()` and `validateCreateNewERC20WrapperContract()`, respectively.
-
-```
-class ContractManager : BaseContract {
-  private:
-    // ...previous source code...
-
-    // Create a new ERC20Wrapper Contract.
-    // function createNewERC20WrapperContract() public {}
-    void createNewERC20WrapperContract(const ethCallInfo& callInfo);
-
-    // Check if transaction can actually create a new ERC20 contract.
-    void validateCreateNewERC20WrapperContract(const ethCallInfo& callInfo) const;
-
-    // ... next source code...
-};
-```
-
-Then, in `contractmanager.cpp`, include the header file (e.g. `#include "erc20wrapper.h"`) and properly implement those functions:&#x20;
-
-```
-void ContractManager::createNewERC20WrapperContract(const ethCallInfo& callInfo) {
-  if (this->caller != this->getContractCreator()) throw std::runtime_error("Only contract creator can create new contracts");
-
-  // Check if desired contract address already exists
-  const auto derivedContractAddress = this->deriveContractAddress(callInfo);
-  if (this->contracts.contains(derivedContractAddress)) throw std::runtime_error("Contract already exists");
-
-  std::unique_lock lock(this->contractsMutex);
-  for (const auto& [protocolContractName, protocolContractAddress] : ProtocolContractAddresses) {
-    if (protocolContractAddress == derivedContractAddress) throw std::runtime_error("Contract already exists");
-  }
-
-  this->contracts.insert(std::make_pair(derivedContractAddress, std::make_unique<ERC20Wrapper>(
-    this->interface, derivedContractAddress, this->getCaller(), this->options->getChainID(), this->db
-  )));
-}
-
-void ContractManager::validateCreateNewERC20WrapperContract(const ethCallInfo& callInfo) const {
-  if (this->caller != this->getContractCreator()) throw std::runtime_error("Only contract creator can create new contracts");
-
-  // Check if desired contract address already exists
-  const auto derivedContractAddress = this->deriveContractAddress(callInfo);
-  if (this->contracts.contains(derivedContractAddress)) throw std::runtime_error("Contract already exists");
-
-  std::unique_lock lock(this->contractsMutex);
-  for (const auto& [protocolContractName, protocolContractAddress] : ProtocolContractAddresses) {
-    if (protocolContractAddress == derivedContractAddress) throw std::runtime_error("Contract already exists");
-  }
-}
-```
-
-The `create` function should create a new instance of the contract and add it to the `ContractManager`, and the `validate` function should only parse the ABI and verify if the parameters are correct.
-
-On both functions, the first if block enforces that only the chain creator can create new contracts, the second if block checks if the contract already exists, and the third if block checks if the contract address is already used by a Protocol Contract, which is not registered in the `ContractManager`.
-
-Now, let's modify the `ethCall()` functions - under `ContractManager::ethCall(const ethCallInfo& callInfo)` you need to parse the functor and call the corresponding function, like this:
-
-```
-void ContractManager::ethCall(const ethCallInfo& callInfo) {
-  std::string functor = std::get<5>(callInfo).substr(0, 4);
-  if (this->getCommit()) {
-    ... some if blocks ...
-    // function createNewERC20WrapperContract() public {}
-    if (functor == Hex::toBytes("0x97aa51a3")) {
-      this->createNewERC20WrapperContract(callInfo);
-      return;
-    }
-    ... more if blocks ...
-  } else {
-    ... some if blocks ...
-    if (functor == Hex::toBytes("0x97aa51a3")) {
-      this->validateCreateNewERC20WrapperContract(callInfo);
-      return;
-    }
-    ... more if blocks ...
-  }
-  throw std::runtime_error("Invalid function call");
-}
-```
-
-If you have multiple contracts, you would do one if block per contract that you need to register, one after the other. You can register as many contracts as you want, though your `ethCall()` function might get a little "bloated" if you have too many of them.
-
-#### Step 8 - Compiling it all
-
-Finally, `cd` back to the project's root, run `./scripts/AIO-setup.sh` to setup your local network, deploy your contract using the chain owner's private key and test your contract's compatibility with your favorite frontend tool.
-
-In order to deploy your contract, you must call the respective `createNewCONTRACTNAMEContract()` with a transaction to the `ContractManager`'s address. The function will create a new contract and return the address of the new contract, you can then use the address to interact with the contract.
-
-It is also possible to create tests using the internal test framework (Catch2) - see the links for more information:
-
-* [tests/contract/erc20wrapper.cpp](https://github.com/SparqNet/orbitersdk-cpp/blob/main/tests/contract/erc20wrapper.cpp)
-* [tests/contract/nativewrapper.cpp](https://github.com/SparqNet/orbitersdk-cpp/blob/main/tests/contract/nativewrapper.cpp)
-* [src/contract/nativewrapper.h](https://github.com/SparqNet/orbitersdk-cpp/blob/main/src/contract/nativewrapper.h)
-* [src/contract/nativewrapper.cpp](https://github.com/SparqNet/orbitersdk-cpp/blob/main/src/contract/nativewrapper.cpp)
-* [src/contract/erc20.h](https://github.com/SparqNet/orbitersdk-cpp/blob/main/src/contract/erc20.h)
-* [src/contract/erc20.cpp](https://github.com/SparqNet/orbitersdk-cpp/blob/main/src/contract/erc20.cpp)
+Finally, go back to the project's root, deploy your local network (see "Setting up the development environment" for details) and your contract using the chain owner's private key, then test your contract's compatibility with your favorite frontend tool. If you wish, you can also write tests for your contract. Check the `tests` folder for more information.

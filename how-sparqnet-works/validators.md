@@ -1,5 +1,5 @@
 ---
-description: How Validators work on SparqNet.
+description: How validators work on SparqNet
 ---
 
 # Validators
