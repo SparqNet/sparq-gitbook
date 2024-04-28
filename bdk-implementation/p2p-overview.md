@@ -1,5 +1,5 @@
 ---
-description: A primer on how P2P messaging works on the Blockchain Development Kit (BDK).
+description: A primer on how P2P messaging works in the Blockchain Development Kit (BDK).
 ---
 
 # P2P Overview

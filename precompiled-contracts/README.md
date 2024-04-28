@@ -1,5 +1,5 @@
 ---
-description: A primer on natively-coded smart contracts in the AppLayer ecossystem.
+description: A primer on natively-coded smart contracts in the AppLayer ecosystem.
 ---
 
 # Precompiled contracts
@@ -8,4 +8,4 @@ Precompiled contracts (also known as "native contracts" or "stateful pre-compile
 
 Similar to Solidity contracts, they can be used to employ any type of logic within the network, but unlike Solidity, they aren’t subject to EVM constraints. This means we can take advantage of that fact and have full control of the contract's logic, unleashing blazing fast performance, flexibility and power.
 
-The contract templates provided by AppLayer's BDK (in the `src/contract/templates` folder) are based on OpenZeppelin contracts, maintaining the same operational standards known on the Solidity ecossystem, but on native C++.
+The contract templates provided by AppLayer's BDK (in the `src/contract/templates` folder) are based on OpenZeppelin contracts, maintaining the same operational standards known in the Solidity ecosystem, but on native C++.

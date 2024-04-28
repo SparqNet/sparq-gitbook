@@ -138,7 +138,7 @@ class ERC20Wrapper : public DynamicContract {
 #endif // ERC20WRAPPER_H
 ```
 
-Here, we recreated the contract's functions but also added a few extra functions (explained on the previous sections). In short, we create:
+Here, we recreated the contract's functions but also added a few extra functions (explained in the previous sections). In short, we create:
 
 * Two constructors - one for creating the contract from scratch, and another for loading it from the database - and the destructor
 * The `ConstructorArguments` tuple, `registerContract()` and `registerContractFunctions()` functions for proper contract registering (notice that the tuple is required, even though it's empty)

@@ -1,5 +1,5 @@
 ---
-description: How the AppLayer ecossystem manages the blockchain state alongside an EVM.
+description: How the AppLayer ecosystem manages the blockchain state alongside an EVM.
 ---
 
 # State management and VM instance creation

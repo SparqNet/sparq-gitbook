@@ -1,5 +1,5 @@
 ---
-description: How smart contracts work on the AppLayer protocol.
+description: How smart contracts work in the AppLayer protocol.
 ---
 
 # Understanding contracts

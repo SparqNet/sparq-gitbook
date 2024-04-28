@@ -39,7 +39,7 @@ cd orbitersdk-cpp
 git checkout -b contract-development main
 ```
 
-Then, install Docker on your system (if you don't have it installed already). Instructions can be found on the links below:
+Then, install Docker on your system (if you don't have it installed already). Instructions can be found at the links below:
 
 * [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
 * [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
@@ -51,7 +51,7 @@ Once Docker is installed, go to the root directory of your cloned repository (wh
 docker build -t orbitersdk-cpp-dev:latest .
 ```
 
-This will build the image and tag it as `orbitersdk-cpp-dev:latest`. You can change the tag to whatever you want, but remember to change it on the next step.
+This will build the image and tag it as `orbitersdk-cpp-dev:latest`. You can change the tag to whatever you want, but remember to change it at the next step.
 
 After building the image, run it with the following command (again, if using Linux or Mac, run as `sudo`):
 
@@ -159,7 +159,7 @@ You can deploy a node using Docker by running `./scripts/auto.sh`. Make sure you
 
 ### Manual deploy
 
-To manually deploy a node, run `./scripts/AIO-setup.sh`. Make sure `tmux` is installed, as the script needs it to work. The script will create two folders on the project's root - `build_local_testnet` and `local_testnet` - and build and deploy a fresh new instance of a local testnet.
+To manually deploy a node, run `./scripts/AIO-setup.sh`. Make sure `tmux` is installed, as the script needs it to work. The script will create two folders at the project's root - `build_local_testnet` and `local_testnet` - and build and deploy a fresh new instance of a local testnet.
 
 Running the script again will stop the testnet, rebuild it, replace it and restart it on the spot. If you wish to manually stop the testnet for some reason, run `tmux kill-server`. You can also read the script to find out the specific names of the tmux sessions to manually restart or stop accordingly.
 

@@ -25,7 +25,7 @@ You can deploy the web application in two ways: *using Docker*, or *manually*.
 
 ### Using Docker (recommended)
 
-Install Docker on your system (if you don't have it installed already). Instructions for your system can be found on the links below:
+Install Docker on your system (if you don't have it installed already). Instructions for your system can be found at the links below:
 
 * [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
 * [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
@@ -80,7 +80,7 @@ The application has two main sections: **Contract Manager** and **Custom Contrac
 
 ### Contract Manager
 
-If you want to use the default contract, just type the required parameters on the function you want to call, and call it by clicking the "Call" button beside it. For example, let's create a new contract with the following parameters, based on the `SimpleContract` template:
+If you want to use the default contract, just type the required parameters for the function you want to call, and call it by clicking the "Call" button beside it. For example, let's create a new contract with the following parameters, based on the `SimpleContract` template:
 
 * `NAME`: "SimpleContract"
 * `SYMBOL`: "APPL"
@@ -116,7 +116,7 @@ First, make sure the contract is defined and added to the Contract Manager so yo
 
 **NOTE**: If you are passing an array as input values, just separate them using commas and the application will make all the necessary changes.
 
-Let's use the `SimpleContract` example because we already registered it earlier on the Contract Manager section. First, develop the contract and deploy it to the network. After that, you can use the Contract Tester to interact with it. The solidity code for the contract is:
+Let's use the `SimpleContract` example because we already registered it earlier in the Contract Manager section. First, develop the contract and deploy it to the network. After that, you can use the Contract Tester to interact with it. The solidity code for the contract is:
 
 ```solidity
 // SPDX-License-Identifier: MIT

@@ -8,7 +8,7 @@ Developers get to choose how Validators are added to the network, but there are 
 
 ## Decentralized
 
-In a decentralized implementation, all Validators have to participate in block creation to ensure that there’s no collusion. A totally decentralized network using rdPoS may face problems when the number of Validators on the network grows massively (e.g. 10,000 Validators), because the latency between those nodes could increase significantly.
+In a decentralized implementation, all Validators have to participate in block creation to ensure that there’s no collusion. A totally decentralized network using rdPoS may face problems when the number of Validators in the network grows massively (e.g. 10,000 Validators), because the latency between those nodes could increase significantly.
 
 To solve this problem, the block time in a decentralized network should be bigger (e.g. 15-30 seconds) so all the nodes have enough time to respond. Validators can be added to a decentralized network by locking a certain amount of tokens in the contract that contains the rdPoS logic.
 

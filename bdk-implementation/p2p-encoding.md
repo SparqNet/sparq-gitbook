@@ -1,5 +1,5 @@
 ---
-description: How P2P messages are structured on the Blockchain Development Kit (BDK).
+description: How P2P messages are structured in the Blockchain Development Kit (BDK).
 ---
 
 # P2P Encoding

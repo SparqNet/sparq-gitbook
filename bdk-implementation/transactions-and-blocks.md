@@ -86,7 +86,7 @@ Content:
   ]
 ```
 
-Blocks transmitted on the network *must* have the Validator signature, which is part of the block but is *outside* its structure. This is intentional, so the block header can be hashed and signed on its own without hashing the signature along with it.
+Blocks transmitted through the network *must* have the Validator signature, which is part of the block but is *outside* its structure. This is intentional, so the block header can be hashed and signed on its own without hashing the signature along with it.
 
 ## Raw block analysis
 

@@ -4,7 +4,7 @@ description: How Applayer's BDK handles chains of contract execution.
 
 # Contract call handling
 
-Each time a transaction or contract execution alters any state variables—such as creating a new contract, updating a variable, or initiating transfers—those changes are *not* set directly on the state, but rather kept track of in a separate location. This is crucially important, as contracts can call other contracts, and nested calls can prolong themselves to a point you have dozens if not hundreds of variables with changed values, or several transactions that were made that must be reverted because the call failed.
+Each time a transaction or contract execution alters any state variables—such as creating a new contract, updating a variable, or initiating transfers—those changes are *not* set directly at the state, but rather kept track of in a separate location. This is crucially important, as contracts can call other contracts, and nested calls can prolong themselves to a point you have dozens if not hundreds of variables with changed values, or several transactions that were made that must be reverted because the call failed.
 
 This is done within `ContractHost` by means of `ContractStack`. The class maintains a record of the original states of these variables, and registers changes made to them during a contract call. This record-keeping is essential for enabling a complete restoration of the original state in the event of a transaction rollback, ensuring that any adverse changes can be undone, safeguarding the blockchain's consistency, reliability and integrity.
 

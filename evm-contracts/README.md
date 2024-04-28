@@ -1,5 +1,5 @@
 ---
-description: A primer on EVM smart contracts in the AppLayer ecossystem.
+description: A primer on EVM smart contracts in the AppLayer ecosystem.
 ---
 
 # EVM contracts
