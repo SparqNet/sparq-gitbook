@@ -5,7 +5,6 @@
   * [A Primer on Smart Contracts](introducing-applayer/a-primer-on-smart-contracts.md)
   * [The Problem With EVMs](introducing-applayer/the-problem-with-evms.md)
   * [What is AppLayer?](introducing-applayer/what-is-applayer.md)
-  * [Meet the Founders](introducing-applayer/meet-the-founders.md)
 * [How AppLayer works](how-applayer-works/README.md)
   * [Validators](how-applayer-works/validators.md)
   * [Sentinels](how-applayer-works/sentinels.md)
