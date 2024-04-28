@@ -4,7 +4,7 @@ description: How to deploy a contract and write tests for it.
 
 # Deploying and testing
 
-Now that the contract is finished and implemented, all that's left to do is deploy it. Though we would algo suggest writing some tests to make sure it's working as intended. This subchapter will explain how to do both.
+Now that the contract is finished and implemented, all that's left to do is deploy it. Though we would also suggest writing some tests to make sure it's working as intended. This subchapter will explain how to do both.
 
 ## Generating the ABI
 

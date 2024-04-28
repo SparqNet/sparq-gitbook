@@ -22,9 +22,9 @@ As quoted by [Itamar](https://github.com/itamarcps): *"The biggest problem is th
 
 If the problem is inherently tied to the EVM, then... *why don't we just get rid of it?* This seems like a reasonable solution, but it can't be the only one either.
 
-The current blockchain landscape is primarily dominated by the Solidity EVM, and for many Web3 companies it is unrealistic to completely remove it from existing applications. However, to properly scale a Web3 based application, we must venture outside the virtual machine somehow.
+The current blockchain landscape is primarily dominated by the Solidity EVM, and for many Web3 companies it is unrealistic to completely remove it from existing applications. However, to properly scale a Web3 based application, we must venture outside the virtual machine.
 
-Our solution in a hybrid one: a modular blockchain that not only allows for *natively-coded contracts*, but also a natively-coded, performance-centric EVM with *stateful pre-compiles*. In other words, a blockchain that doesn't *need* a virtual machine to run smart contracts, but has one anyway so existing contracts can be deployed as-is.
+Our solution is a hybrid of old and new: a modular blockchain that not only allows for *natively-coded contracts*, but also a natively-coded, performance-centric EVM with *stateful pre-compiles*. In other words, a blockchain that doesn't *need* a virtual machine to run smart contracts, but still has support for existing contracts to be deployed as-is.
 
 Having an EVM running in parallel of stateful pre-compiles unlocks performance optimizations to existing Solidity contracts and accelerates them with pre-compiled functions within the state, programmed in common performance-driven development languages, such as C++, C#, Rust, and more.
 
