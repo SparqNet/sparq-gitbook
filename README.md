@@ -18,8 +18,8 @@ layout:
     visible: true
 ---
 
-# Welcome to SparqNet Docs
+# Welcome to AppLayer Docs
 
-Welcome to the central hub for SparqNet documentation. This repository contains information on all the core components of SparqNet, such as design and architecture details, how the SparqNet protocol works, a glossary of terms, community resources, SDK documentation, developer guides, code snippets and more.
+Welcome to the central hub for AppLayer documentation. This repository contains information on all the core components of the AppLayer network, such as design and architecture details, how the Blockchain Development Kit (BDK) works, a glossary of terms, community resources, documentation, developer guides, code snippets and more.
 
 The reader should be substantially familiar with Unified Modeling Language (UML), as some sections contain diagrams that further elaborate the concepts explained.

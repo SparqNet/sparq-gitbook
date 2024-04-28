@@ -14,4 +14,4 @@ In the diagram above, block C was replaced by block D followed by block E, rolli
 
 The solution to the problem is avoiding the rollback condition altogether. This can be done by deterministically defining which network node can create a block, thereby eliminating the block race condition and keeping everyone in the network synchronized to the same latest block.
 
-The SparqNet project implements this concept as **Random Deterministic Proof of Stake (rdPoS)**, which pairs a block congestion system and a random number generator system, allowing only one Validator to create a block in a given time, thus avoiding rollbacks and achieving consensus on ultra-fast networks.
+AppLayer implements this concept as **Random Deterministic Proof of Stake (rdPoS)**, which pairs a block congestion system and a random number generator system, allowing only one Validator to create a block at any given time, thus avoiding rollbacks and achieving consensus on ultra-fast networks.

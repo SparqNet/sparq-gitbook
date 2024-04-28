@@ -11,7 +11,7 @@ description: Definitions of some technical terms used throughout the documentati
 | DB                      | Database                                                                                                                                                            |
 | rdPoS                   | Random Deterministic Proof-of-Stake                                                                                                                                 |
 | RLP                     | Recursive-Length Prefix                                                                                                                                             |
-| SDK                     | Software Development Kit                                                                                                                                            |
+| BDK                     | Blockchain Development Kit                                                                                                                                            |
 | NFT                     | Non-Fungible Token                                                                                                                                                  |
 | RPC                     | Remote Procedure Call                                                                                                                                               |
 | UTXO                    | Unspent Transaction Output (commonly used by Bitcoin-derived chains, analogous to Accounts, used by Ethereum-derived chains)                                        |
@@ -26,6 +26,3 @@ description: Definitions of some technical terms used throughout the documentati
 | Pointer                 | An item that shows where data is stored and helps verify it                                                                                                         |
 | Sandbox                 | An isolated testing environment for experimenting with code                                                                                                         |
 | Merkle tree             | An abstract data type with leaves (nodes) holding cryptographic hashes of data blocks while nodes that aren’t leaves have cryptographic hashes of their child nodes |
-| Patricia tree           | A radix trie variant where nodes only store the position of the first bit differentiating sub-trees                                                                 |
-|                         |                                                                                                                                                                     |
-|                         |                                                                                                                                                                     |

@@ -4,7 +4,7 @@ description: Cutting out malicious nodes, carefully.
 
 # Slashing
 
-What happens when a node answers with a "randomness" hash that does not match its own hash? Or when a node creates an invalid block with invalid transactions? Or when a node can't create a block before reaching the network's time limit?
+What happens when a validator answers with a "randomness" hash that does not match its own hash? Or when a validator creates an invalid block with invalid transactions? Or when a validator can't create a block before reaching the network's time limit?
 
 Misbehaving nodes suffer consequences. Since Validator signatures are required at protocol level, if a Validator tries to break the rules, it's possible to know who it is thanks to the signature, and "slash" it from the network.
 

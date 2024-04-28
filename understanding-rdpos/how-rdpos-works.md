@@ -6,7 +6,7 @@ description: The logical flux of the rdPoS algorithm.
 
 The heart of rdPoS is RandomGen, a deterministic uint256\_t generator used for almost everything related to consensus. This deterministic randomness ensures that every node has a chance to respond to a given request (block, randomness, bridging, etc.), while making sure that the nodes selected from the network are truly random and not problematic nodes operated by a malicious actor.
 
-For RandomGen to be viable, it needs to be seeded with a truly random number. Our solution for that is as follows:
+For RandomGen to be viable, it needs to be seeded with a truly random number. RandomGen works as follows:
 
 * Every time a new block is about to be created, 16 random nodes are selected using RandomGen with the previous block’s randomness seed.
 * These nodes make a 32-byte random string (`RandomnessSeed`) and hash it (`RandomnessHash`), then sign the hash and publish it to the network.
@@ -40,6 +40,6 @@ A block in an rdPoS network is created by the following rules:
 <figure><img src="../.gitbook/assets/NewBlock.png" alt=""><figcaption><p>New block is created with randomness seed, Validator signature and the transactions</p></figcaption></figure>
 
 * The block is signed and published to the network by the first Validator, while the other Validators verify that all transaction signatures (random and hashed) correspond with the list created at the start.
-* The genesis block (the very first block in the chain) enforces a given fixed randomness to be valid, since there is no previous block before genesis to derive the randomness from. Additionally, at least five hardcoded Validators are needed to bootstrap the network, since each block requires at least 4 Validators to confirm the string and hash transaction signatures, and one for signing the block itself.&#x20;
+* The genesis block (the very first block in the chain) enforces a given fixed randomness to be valid, since there is no previous block before genesis to derive the randomness from. Additionally, at least five hardcoded Validators are needed to bootstrap the network, since each block requires at least 4 Validators to confirm the string and hash transaction signatures, and one for signing the block itself.
 
-As quoted by [Supra](https://github.com/Jean-Lessa): _"It's like playing poker but everyone hashes their hands first before showing the real cards"_.
+As quoted by [Supra](https://github.com/Jean-Lessa): *"It's like playing poker but everyone hashes their hands first before showing the real cards"*.
