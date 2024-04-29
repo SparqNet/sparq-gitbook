@@ -6,7 +6,7 @@ description: How the functional elements of AppLayer interact with each other.
 
 This chapter aims to explain in technical detail how the BDK is implemented, as well as its submodules and how everything comes together to deliver a blazing fast blockchain.
 
-The first few subchapters paint a more holistic view of the BDK project, as most components are pretty straight-forward to understand, and developers are expected to use the [Doxygen](https://doxygen.nl) documentation as a reference to further understand how the project works. The later subchapters show some components that are particularly denser and/or complex enough that they warrant their own separated explanations.
+The first few subchapters paint a more holistic view of the BDK, as most components are pretty straight-forward to understand, and developers are expected to use the [Doxygen](https://doxygen.nl) documentation as a reference to further understand how the project works. The later subchapters show some components that are particularly denser and/or complex enough that they warrant their own separated explanations.
 
 Looking at a higher level of abstraction, the original C++ implementation of the BDK is structured like this:
 
