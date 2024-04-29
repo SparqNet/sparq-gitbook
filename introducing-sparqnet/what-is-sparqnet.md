@@ -4,10 +4,18 @@ description: The light at the end of the tunnel
 
 # What is SparqNet?
 
+<<<<<<< Updated upstream:introducing-sparqnet/what-is-sparqnet.md
 The SparqNet project is made up of two parts:
 
 * An SDK (and documentation) for developers to easily build application-specific Web 2.0 native chains with unprecedented freedom (hereby denominated [**OrbiterSDK**](https://github.com/SparqNet/orbitersdk-cpp)); and
 * A network that allows the bridging of data and assets between these app-specific chains and external chains (hereby denominated **SparqNet**).
+=======
+The AppLayer Network is made up of three parts:
+
+* An EVM network built on top of the Blockchain Development Kit which enables builders to deploy EVM smart contracts and scale with C++ stateful pre-compiles.
+* A Blockchain Development Kit (hereby denominated [**BDK**](https://github.com/SparqNet/orbitersdk-cpp)), with extensive documentation for developers to easily build their own AppLayer's with unprecedented freedom.
+* A network that allows the bridging of data and assets between these app-specific chains and external chains we call the Chain Abstraction Network (**CAN**)
+>>>>>>> Stashed changes:introducing-applayer/what-is-applayer.md
 
 Therefore, blockchains built using OrbiterSDK are able to communicate with each other through SparqNet.
 
