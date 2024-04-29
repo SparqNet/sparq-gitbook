@@ -37,7 +37,7 @@
   * [Types of pre-compiled contracts](precompiled-contracts/types-of-precompiled-contracts.md)
   * [Dynamic and Protocol Contracts](precompiled-contracts/dynamic-and-protocol-contracts.md)
   * [SafeVariables and commit/revert logic](precompiled-contracts/safevariables-and-commit-revert-logic.md)
-  * [How to code a precompiled contract](how-contracts-work/how-to-code-a-precompiled-contract.md)
+  * [How to code a precompiled contract](precompiled-contracts/how-to-code-a-precompiled-contract.md)
   * [Creating a Dynamic Contract (Simple)](precompiled-contracts/creating-a-dynamic-contract-simple/README.md)
     * [Simple Contract Header](precompiled-contracts/creating-a-dynamic-contract-simple/simple-contract-header.md)
     * [Simple Contract Source](precompiled-contracts/creating-a-dynamic-contract-simple/simple-contract-source.md)
