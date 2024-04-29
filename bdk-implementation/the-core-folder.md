@@ -12,7 +12,7 @@ This subchapter contains a brief overview of each one of the components inside t
 
 The `blockchain.h` file contains the **Blockchain** and **Syncer** classes.
 
-The **Blockchain** class acts as the mother class that unites all the other components described throughout the docs, including the Syncer. Think of it as "the power button on AppLayer's PC case" - its objective is to be the entry point of the system and act as a mediator for the other components, passing data around to each other, such as (but not limited to):
+The **Blockchain** class acts as the mother class that unites all the other components described throughout the docs, including the Syncer. Think of it as "the power button on AppLayer's PC case" - its objective is to be the entry point of the system and act as a mediator for the other components, passing around data to each other, such as (but not limited to):
 
 * The global options singleton
 * The database
@@ -21,7 +21,7 @@ The **Blockchain** class acts as the mother class that unites all the other comp
 * The rdPoS protocol
 * The HTTP and P2P servers
 
-The **Syncer** class is responsible for syncing the blockchain with other nodes in the network, as well as doing the proper transaction broadcasts and block creations (if the node happens to be a Validator).
+The **Syncer** class is responsible for syncing the blockchain with other nodes in the network, as well as handling proper transaction broadcasts and block creations (if the node happens to be a Validator).
 
 ## Consensus
 
@@ -58,7 +58,7 @@ On node initialization, a history of up to 1000 of the most recent blocks is loa
 
 Once a block and its transactions are received from the network, they're stored in memory. If more than 1000 blocks (or 1 million transactions) are stored in memory at a given time, older blocks are periodically saved to the database. This makes the blockchain lightweight memory-wise and extremely responsive.
 
-Searching for and reading from blocks in history is done in several places in the system, so we can say the Storage and DB classes, when working together, are the end point of the blockchain's operations history.
+Searching for and reading from blocks in history is done in several places in the system, so when the Storage and DB classes are working together, they act as the end point of the blockchain's operations history.
 
 ## Database dumping
 
@@ -69,3 +69,4 @@ The `dump.h` file contains the **Dumpable**, **DumpManager** and **DumpWorker** 
 *DumpManager* is the class that manages a list of Dumpable components in the blockchain, iterating through each of them and dumping them one by one when told to.
 
 *DumpWorker* acts as a worker thread for DumpManager, doing the actual work of dumping each Dumpable component sent by DumpManager in a separate thread. This allows for parallel dumps, speeding up the process significantly, which is important when there are many objects or particularly heavy ones (e.g. State) that need to be dumped ASAP without hanging the entire blockchain.
+

@@ -10,7 +10,7 @@ The database itself is an abstraction of a [Speedb](https://github.com/speedb-io
 
 The database requires a filesystem path to open it (if it already exists) or create it on the spot (if it doesn't exist) during construction. It closes itself automatically on destruction.
 
-Content in the database is stored as raw bytes. This is due to space optimization purposes, as one raw byte equals two UTF-8 characters (e.g. an address like `0x1234567890123456789012345678901234567890`, ignoring the "0x" prefix, occupies 20 raw bytes - "12 34 56 ..." - , but 40 bytes if converted to a string, since each byte becomes two separate characters - "1 2 3 4 5 6 ...").
+Content in the database is stored as raw bytes. This is due to space optimizations, as one raw byte equals two UTF-8 characters (e.g. an address like `0x1234567890123456789012345678901234567890`, ignoring the "0x" prefix, occupies 20 raw bytes - "12 34 56 ..." - , but 40 bytes if converted to a string, since each byte becomes two separate characters - "1 2 3 4 5 6 ...").
 
 For the main CRUD operations, refer to the `has()`, `get()`, `put()` and `del()` functions. Due to how the database works internally, updating an entry is the same as inserting a different value in a key that already exists, effectively replacing the value that existed before (e.g. `put(oldKey, newValue)`). There's also `getBatch()` and `putBatch()` for batched operations, as well as `getKeys()` for fetching only the keys.
 
@@ -130,3 +130,4 @@ Used to store EVM-related stuff like storage keys and values (essentially the EV
 | Key                                         | Value                    |
 | ------------------------------------------- | ------------------------ |
 | Address (20 bytes) + Storage Key (32 bytes) | Storage Value (32 bytes) |
+

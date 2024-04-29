@@ -8,7 +8,7 @@ Chains with virtual machines share the same problem: contracts built on top of t
 
 This is common on Ethereum and other EVM-based chains - having to share a "generic computer" with the whole world is *inefficient by design*. Forcing a chain to be both generic and decentralized at the same time puts heavy limits on which types of applications you can decentralize and how much you can decentralize them.
 
-#### Limitations of the EVM
+## Limitations of the EVM
 
 For example, in the case of the Ethereum Virtual Machine, you can not do any of the following:
 
@@ -18,7 +18,7 @@ For example, in the case of the Ethereum Virtual Machine, you can not do any of 
 
 As quoted by [Itamar](https://github.com/itamarcps): *"The biggest problem is that everyone is sharing the same computer, and that computer is a Commodore 64"*.
 
-#### The solution
+## The solution
 
 If the problem is inherently tied to the EVM, then... *why don't we just get rid of it?* This seems like a reasonable solution, but it can't be the only one either.
 
@@ -28,7 +28,7 @@ Our solution is a hybrid of old and new: a modular blockchain that not only allo
 
 Having an EVM running in parallel of stateful pre-compiles unlocks performance optimizations to existing Solidity contracts and accelerates them with pre-compiled functions within the state, programmed in common performance-driven development languages, such as C++, C#, Rust, and more.
 
-#### The caveats (and how we're solving them)
+## The caveats (and how we're solving them)
 
 There’s a tremendous advantage to using native stateful pre-compiles, however, this approach also comes with its own set of problems:
 
@@ -39,3 +39,4 @@ There’s a tremendous advantage to using native stateful pre-compiles, however,
 What if there was a blockchain system that incorporated stateful pre-compiles, allowing third parties to deploy and natively support these contracts within a single network that shares its state?
 
 This is exactly what AppLayer does. AppLayer is a modular blockchain of multiple layers, including an EVM, stateful pre-compiles, and chain abstraction.
+

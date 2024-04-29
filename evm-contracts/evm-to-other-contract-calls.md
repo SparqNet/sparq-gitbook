@@ -1,5 +1,5 @@
 ---
-description:  How contract calls happen from the EVM side in AppLayer.
+description: How contract calls happen from the EVM side in AppLayer.
 ---
 
 # EVM to other contract calls
@@ -19,7 +19,7 @@ evmc::Result ContractHost::call(const evmc_message& msg) noexcept {
   this->leftoverGas_ = msg.gas;
   /// evmc::Result constructor is: _status_code + _gas_left + _output_data + _output_size
   if (recipientAccount.contractType == CPP) {
-    // Uh we are an CPP contract, we need to call the contract evmEthCall function and put the result into a evmc::Result
+    // We are a CPP contract, we need to call the contract evmEthCall function and put the result into a evmc::Result
     try {
       this->deduceGas(1000); // CPP contract call is 1000 gas
       auto& contract = contracts_[recipient];
@@ -44,3 +44,4 @@ evmc::Result ContractHost::call(const evmc_message& msg) noexcept {
   return result;
 }
 ```
+

@@ -4,14 +4,15 @@ description: The light at the end of the tunnel
 
 # What is AppLayer?
 
-The AppLayer Network is made up of two parts:
+The AppLayer Network is made up of three parts:
 
-* A Blockchain Development Kit (hereby denominated [**BDK**](https://github.com/SparqNet/orbitersdk-cpp)), with extensive documentation for developers to easily build application-specific Web 2.0 native chains with unprecedented freedom; and
-* A network that allows the bridging of data and assets between these app-specific chains and external chains (hereby denominated **AppLayer**).
+* A Blockchain Development Kit (hereby denominated [**BDK**](https://github.com/SparqNet/orbitersdk-cpp)), with extensive documentation for developers to easily build their own AppLayer's with unprecedented freedom
+* An EVM network built on top of the Blockchain Development Kit which enables builders to deploy EVM smart contracts and scale with C++ stateful pre-compiles
+* A network that allows the bridging of data and assets between these app-specific chains and external chains we call the Chain Abstraction Network (**CAN**)
 
 Therefore, blockchains built using the BDK are able to communicate with each other through AppLayer.
 
-#### Potential use cases
+## Potential use cases
 
 AppLayer provides all the essential tools to build a wide range of products for decentralized finance, data storage, gaming, and much more. It can power applications such as:
 
@@ -33,3 +34,4 @@ Other potential use cases include (but not limited to):
 * Arbitrage bot
 * Blockchain-enabled utilities such as water and power
 * Supply chain and logistics
+

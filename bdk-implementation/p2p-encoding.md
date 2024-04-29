@@ -8,7 +8,7 @@ This subchapter explains how P2P data travels through AppLayer, and how said dat
 
 ## Handshake
 
-After the session succesfully creates a connection, the first thing that happens is a handshake.
+After the session successfully creates a connection, the first thing that happens is a handshake.
 
 | Variable      | Size    | Info            |
 | ------------- | ------- | --------------- |
@@ -162,3 +162,4 @@ Request the TxBlock memory pool of another node.
 * Answer Example: node has two transactions within mempool with the following RLPs: `f86ba4cfffe74621e0caa14dfcb67a6f263391f4a6ad957ace256f3e706b6da07517a63295165701823f44a08cfdf3826149ca0317eaf4f5832c867a4f5050e3e70d635323947d61a4f35618a07dbe86e6a8cef509c7c6174cb8c703ddd8cb695511d72043630d99888ff2ba20`, and `f86ba4cfffe74621e0caa14dfcb67a6f263391f4a6ad957ace256f3e706b6da07517a63295165701823f44a01545c0c89ad5fda9e4c6ef65f264ef575fa2edebef29d577f88d365ff9d28357a00d9ed64e1675315477aca44908148b9b572c7de45d420398193dcfc2d430d158`
   * To encode this, the node has to encode the number of transactions (`0x00000002`), and then append the transactions' sizes and datas in an ordered manner
   * The resulting answer message would be `0x01adf01827349cad810003000000020000006df86ba4cfffe74621e0caa14dfcb67a6f263391f4a6ad957ace256f3e706b6da07517a63295165701823f44a08cfdf3826149ca0317eaf4f5832c867a4f5050e3e70d635323947d61a4f35618a07dbe86e6a8cef509c7c6174cb8c703ddd8cb695511d72043630d99888ff2ba200000006df86ba4cfffe74621e0caa14dfcb67a6f263391f4a6ad957ace256f3e706b6da07517a63295165701823f44a01545c0c89ad5fda9e4c6ef65f264ef575fa2edebef29d577f88d365ff9d28357a00d9ed64e1675315477aca44908148b9b572c7de45d420398193dcfc2d430d158`
+

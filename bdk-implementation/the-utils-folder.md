@@ -36,7 +36,7 @@ The `db.h` file contains the **DB** class - an abstraction of a [Speedb](https:/
 
 <figure><img src="../.gitbook/assets/DynamicException.png" alt=""><figcaption></figcaption></figure>
 
-The `dynamicexception.h` file contains the **DynamicException** class - a custom exception class inherited from `std::exception` used across the whole project. It is meant to be used when there's no applicable exception from the STD library for a given error that should be catched - usually the STD library is too generic, as the project grows some exceptions may become specific to the point we need to handle them in a customized manner.
+The `dynamicexception.h` file contains the **DynamicException** class - a custom exception class inherited from `std::exception` used across the whole project. It is meant to be used when there's no applicable exception from the STD library for a given error that should be caught - usually the STD library is too generic, as the project grows some exceptions may become specific to the point we need to handle them in a customized manner.
 
 ## Secp256k1
 
@@ -79,7 +79,7 @@ The `merkle.h` class contains the **Merkle** class - a custom implementation of 
 * [https://medium.com/coinmonks/implementing-merkle-tree-and-patricia-tree-b8badd6d9591](https://medium.com/coinmonks/implementing-merkle-tree-and-patricia-tree-b8badd6d9591)
 * [https://lab.miguelmota.com/merkletreejs/example/](https://lab.miguelmota.com/merkletreejs/example/)
 
-A "Merkle Tree" is a data structure in binary tree format (e.g. "heap sort"), where data is stored in the "leaves", and the "branches" are paths to reach said data. This structure is commonly used in the crypto space as a tool for *verification*: it hashes the previous layers in pairs to make new layers, bottom-up, until it reaches a single result which would be the "root" of the tree - this makes the root a unique fingerprint for the entire tree, so you only need to check the root hash to verify that both the tree and its leaves were not tampered with.
+A "Merkle Tree" is a data structure in binary tree format (e.g. "heap sort"), where data is stored in the "leaves", and the "branches" are paths to reach their data. This structure is commonly used in the crypto space as a tool for *verification*: it hashes the previous layers in pairs to make new layers, bottom-up, until it reaches a single result which would be the "root" of the tree - this makes the root a unique fingerprint for the entire tree, so you only need to check the root hash to verify that both the tree and its leaves were not tampered with.
 
 ## Options
 
@@ -151,3 +151,4 @@ This list is only an example and does not reflect the entire contents of the fil
 * `padLeft()` and `padRight()`, used for adding padding to strings at their left and right sides, respectively
 * `padLeftBytes()` and `padRightBytes()`, same as above, but specifically for use with raw byte strings
 * `toLower()` and `toUpper()`, used for converting strings to all-lower and all-upper case, respectively
+

@@ -8,7 +8,7 @@
 * [How AppLayer works](how-applayer-works/README.md)
   * [Validators](how-applayer-works/validators.md)
   * [Sentinels](how-applayer-works/sentinels.md)
-  * [Subnets](how-applayer-works/subnets.md)
+  * [Application Chains](how-applayer-works/appchains.md)
   * [Bridging](how-applayer-works/bridging/README.md)
     * [AppLayer-to-AppLayer Data Bridging](how-applayer-works/bridging/applayer-to-applayer-data-bridging.md)
     * [AppLayer-to-AppLayer Token Bridging](how-applayer-works/bridging/applayer-to-applayer-token-bridging.md)
@@ -56,3 +56,4 @@
 * [Join our Community](join-our-community.md)
 * [Get in Touch](get-in-touch.md)
 * [Glossary](glossary.md)
+

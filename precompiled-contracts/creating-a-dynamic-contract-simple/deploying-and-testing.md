@@ -138,3 +138,4 @@ Keep in mind that we're not accessing the contract directly, we're interacting w
 In order to run your tests, compile the project as you normally would, and then run `./src/bins/orbitersdkd-tests/orbitersdkd-tests -d yes [simplecontract]` from within your build directory. The `[simplecontract]` tag forces only these specific tests for SimpleContract to run (this is set in the `TEST_CASE()` lines in the example above). The `-d yes` flag makes it more verbose, showing exactly which test case is being run at the moment.
 
 As a bonus, even though this whole chapter is focused on precompiled contracts, the `SDKTestSuite` also has a function that can deploy a contract's bytecode directly, called `SDKTestSuite::deployBytecode()`, which takes a `Bytes` object as a parameter that represents the contract's bytecode.
+

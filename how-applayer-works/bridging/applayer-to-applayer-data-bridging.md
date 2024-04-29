@@ -28,5 +28,5 @@ Bridging arbitrary data from an AppLayer chain (A) to another (B) is simple:
 
 * A verifies the signatures and checks if the randomly selected nodes were using the network's RandomGen seed. If everything matches, the exchange is complete, but if not, there's a malicious node in the network which should be reported.
 
-It is possible for Subnet A to only send information to the target chain without having to wait for an answer. This call can possibly trigger logic within the target chain, depending on how their developers decided to handle your message.
+It is possible for A to only send information to the target chain without having to wait for an answer. This call can possibly trigger logic within the target chain, depending on how their developers decided to handle your message.
 

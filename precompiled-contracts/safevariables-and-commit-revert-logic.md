@@ -15,7 +15,7 @@ MyClass::updateValueAndThrow(const uint64_t key, const uint64_t value) {
 }
 ```
 
-Even if you use a try/catch block, the value of `myMap[key]` will be permanently changed and won't roll back on its own, because that's how C++ works - it doesn't go out of its way to do things you didn't explicitely told it to do. You would have to manually roll this logic by storing the old value in a temporary variable before changing it, and implementing specific logic to assign it back again in case of an error. The previous example could theoretically be coded like this:
+Even if you use a try/catch block, the value of `myMap[key]` will be permanently changed and won't roll back on its own, because that's how C++ works - it doesn't go out of its way to do things you didn't explicitly tell it to do. You would have to manually roll this logic by storing the old value in a temporary variable before changing it, and implementing specific logic to assign it back again in case of an error. The previous example could theoretically be coded like this:
 
 ```cpp
 MyClass::updateValueAndThrow(const uint64_t key, const uint64_t value) {
@@ -29,11 +29,11 @@ MyClass::updateValueAndThrow(const uint64_t key, const uint64_t value) {
 }
 ```
 
-For Protocol Contracts, that's pretty much the gist of it. Dynamic Contracts, however, automatically provide said functionality with the use of special types called **SafeVariables**, declared inside the `src/contract/variables` folder. Each Dynamic Contract includes a vector of references to SafeVariables, which is used to register used variables within a specific function call.
+For Protocol Contracts, that's most of the required context. Dynamic Contracts, however, automatically provide their functionality with the use of special types called **SafeVariables**, declared inside the `src/contract/variables` folder. Each Dynamic Contract includes a vector of references to SafeVariables, which is used to register used variables within a specific function call.
 
-All SafeVariables inherit from the `SafeBase` class, which adheres to the following rules:
+All SafeVariables inherit from the `SafeBase` class, which adhere to the following rules:
 
-* Has two internal variables: one for the original value and another that is a pointer to a temporary value
+* Have two internal variables: one for the original value and another that is a pointer to a temporary value
 * Must override the `check()`, `commit()`, and `revert()` functions
   * `check()` should verify if the temporary value is `nullptr`; if it is, it should set the temporary value to the original value
   * `commit()` should copy the temporary value to the original value
@@ -75,3 +75,4 @@ Our `SafeUnorderedMap` variable allows limited looping through the container. Th
 | tempSize() | Returns the size of the temporary container                          | size\_type      |
 
 Keep in mind that the temporary and original containers are not the same, so duplicates within `size()` and `tempSize()` are possible.
+

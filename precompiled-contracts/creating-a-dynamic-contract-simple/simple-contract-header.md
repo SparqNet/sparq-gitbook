@@ -4,7 +4,7 @@ description: Coding the Simple Contract's header file
 
 # Simple Contract Header
 
-Having created the `SimpleContract` files and registered them in CMake, let's implement the contract's header first, as most of the registering is done there.
+Having created the `SimpleContract` files and registered them in CMake, let's implement the contract's header first, as most of the registration is done there.
 
 ## Declaring the Contract Class
 
@@ -291,3 +291,4 @@ Finally, we go to the `src/contract/customcontracts.h` file, include our contrac
 
 using ContractTypes = std::tuple<..., SimpleContract>; // <--- Add your contract here
 ```
+

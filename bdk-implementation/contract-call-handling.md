@@ -76,4 +76,5 @@ class ContractStack {
 };
 ```
 
-The existence of only *one* instance of `ContractStack` per `ContractHost`, and its integration within the RAII framework of `ContractHost`, guarantees that state values are meticulously commited or reverted upon the completion or rollback of transactions. This robust design prevents state spill-over between different contract executions, fortifying transaction isolation and integrity across the blockchain network - even in the dynamic and mutable landscape of blockchain transactions, the integrity and consistency of state changes are meticulously maintained, safeguarding against unintended consequences and errors during contract execution.
+The existence of only *one* instance of `ContractStack` per `ContractHost`, and its integration within the RAII framework of `ContractHost`, guarantees that state values are meticulously committed or reverted upon the completion or rollback of transactions. This robust design prevents state spill-over between different contract executions, fortifying transaction isolation and integrity across the blockchain network - even in the dynamic and mutable landscape of blockchain transactions, the integrity and consistency of state changes are meticulously maintained, safeguarding against unintended consequences and errors during contract execution.
+
