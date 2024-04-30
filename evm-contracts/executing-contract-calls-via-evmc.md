@@ -6,7 +6,7 @@ description: How to use AppLayer's EVM directly to call contracts.
 
 To execute a contract call within AppLayer's EVM environment, we use the `evmc_execute()` function from the EVMC library. This function orchestrates the execution of contract bytecode, interfacing directly with the Ethereum Virtual Machine:
 
-```c++
+```cpp
 static inline struct evmc_result evmc_execute(
   struct evmc_vm* vm, const struct evmc_host_interface* host,
   struct evmc_host_context* context, enum evmc_revision rev,
@@ -14,11 +14,11 @@ static inline struct evmc_result evmc_execute(
 );
 ```
 
-It's crucial to understand that the VM itself is *stateless*—it does not maintain any information about the contracts' states or their data. The VM's role is strictly to interpret and execute bytecode according to the Ethereum protocol specifications.
+It's crucial to understand that the VM itself is _stateless_—it does not maintain any information about the contracts' states or their data. The VM's role is strictly to interpret and execute bytecode according to the Ethereum protocol specifications.
 
 To enable the stateless VM to interact with the state (such as storage keys, account balances, or initiating further contract calls), we must provide it with access to the state through the `evmc_host_interface` and `evmc_host_context` structs. The `evmc_host_interface` struct contains a set of callback functions that the VM can use to query or modify the state:
 
-```c++
+```cpp
 struct evmc_host_interface {
   evmc_account_exists_fn account_exists;
   evmc_get_storage_fn get_storage;
@@ -41,7 +41,7 @@ struct evmc_host_interface {
 
 Within AppLayer's BDK, we use `evmc_execute()` like this:
 
-```c++
+```cpp
 evmc::Result result (evmc_execute(this->vm_, &this->get_interface(), this->to_context(),
 evmc_revision::EVMC_LATEST_STABLE_REVISION, &msg, recipientAcc.code.data(), recipientAcc.code.size()));
 ```

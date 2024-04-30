@@ -10,8 +10,6 @@ Now that the contract is finished and implemented, all that's left to do is depl
 
 We have a tool that is compiled with the project that generates the ABI of your contract. Its executable is compiled from the `src/bins/contractabigenerator/main.cpp` file, with the following code snippet by default:
 
-<figure><img src="../../.gitbook/assets/GenerateContractABI (1).png" alt=""><figcaption><p>Source file for the contract ABI generator</p></figcaption></figure>
-
 ```cpp
 #include "utils/jsonabi.h"
 
@@ -44,11 +42,7 @@ For testing contracts specifically, we have developed our own test suite called 
 
 First, create a new file in the `tests/contract` folder with the name of your contract - in our case, `tests/contract/simplecontract.cpp` (which already exists as it is part of the project).
 
-<figure><img src="../../.gitbook/assets/CreateContractTestFile (1).gif" alt=""><figcaption><p>Creating a test file for the contract</p></figcaption></figure>
-
-Then, add the file to the `CMakeLists.txt` file in the parent folder:
-
-<figure><img src="../../.gitbook/assets/AddTestFileToCMake (1).png" alt=""><figcaption><p>Source file for the contract's CMakeLists.txt</p></figcaption></figure>
+Then, add the file to the `tests/CMakeLists.txt` file:
 
 ```cmake
 set(TESTS_SOURCES
@@ -138,4 +132,3 @@ Keep in mind that we're not accessing the contract directly, we're interacting w
 In order to run your tests, compile the project as you normally would, and then run `./src/bins/orbitersdkd-tests/orbitersdkd-tests -d yes [simplecontract]` from within your build directory. The `[simplecontract]` tag forces only these specific tests for SimpleContract to run (this is set in the `TEST_CASE()` lines in the example above). The `-d yes` flag makes it more verbose, showing exactly which test case is being run at the moment.
 
 As a bonus, even though this whole chapter is focused on precompiled contracts, the `SDKTestSuite` also has a function that can deploy a contract's bytecode directly, called `SDKTestSuite::deployBytecode()`, which takes a `Bytes` object as a parameter that represents the contract's bytecode.
-

@@ -1,14 +1,14 @@
 ---
-description: Explanations and correlations of Solidity's ABI compared to AppLayer's pre-compiled approach.
+description: >-
+  Explanations and correlations of Solidity's ABI compared to AppLayer's
+  pre-compiled approach.
 ---
 
 # Solidity ABI
 
-AppLayer is primarily a *native, pre-compiled* blockchain, which means its main focus is to run without the need for an EVM. However, the vast majority of the smart contract ecosystem operates and depends on [Solidity](https://docs.soliditylang.org/en/latest) - not only the contracts themselves but also the data they share across each other.
+AppLayer is primarily a _native, pre-compiled_ blockchain, which means its main focus is to run without the need for an EVM. However, the vast majority of the smart contract ecosystem operates and depends on [Solidity](https://docs.soliditylang.org/en/latest) - not only the contracts themselves but also the data they share across each other.
 
 When developing pre-compiled contracts, AppLayer makes use of an abstraction of Solidity's ABI encoding and decoding processes to properly translate between native and non-native data types. The **ABI** namespace, declared in `src/contract/abi.h`, contains several functions for Solidity ABI-related operations, for managing and manipulating data in Solidity format.
-
-<figure><img src="../.gitbook/assets/SolidityABI.png" alt=""><figcaption><p>Source file for AppLayer's Solidity ABI logic</p></figcaption></figure>
 
 This is only an overview, check the [Doxygen](https://doxygen.nl) docs for more details on how those functions work.
 

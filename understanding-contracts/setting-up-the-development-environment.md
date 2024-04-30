@@ -18,11 +18,11 @@ You're able to tweak almost everything related to the BDK. We offer pre-existing
 
 Head over to the [GitHub repository](https://github.com/AppLayerLabs/bdk-cpp) and click the "Fork" button. After that, you can clone your forked repository with `git clone` and start developing on your own local blockchain.
 
-<figure><img src="https://github.com/SparqNet/sparq-docs/raw/main/Sparq_en-US/ch3/img/ForkButton.png" alt=""><figcaption><p>Go on and fork it!</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/fork.png" alt=""><figcaption><p>Go on and fork it!</p></figcaption></figure>
 
 ## Setup
 
-You can setup the environment in two ways: *using Docker*, or *manually*. Manual setup has instructions for APT-based distros (e.g. Debian, Ubuntu, Mint, etc.), but other distros should work as long as you have all the dependencies installed.
+You can setup the environment in two ways: _using Docker_, or _manually_. Manual setup has instructions for APT-based distros (e.g. Debian, Ubuntu, Mint, etc.), but other distros should work as long as you have all the dependencies installed.
 
 ### Docker (recommended)
 
@@ -151,7 +151,7 @@ Usable tags are:
 
 ## Deploying
 
-Currently there are two ways to deploy an AppLayer node: *manual*, and *dockerized*. Go back to the project's root folder and check the `scripts` subfolder - there are two main scripts there used for deploying the node. You can pick whichever one you prefer, depending on your needs.
+Currently there are two ways to deploy an AppLayer node: _manual_, and _dockerized_. Go back to the project's root folder and check the `scripts` subfolder - there are two main scripts there used for deploying the node. You can pick whichever one you prefer, depending on your needs.
 
 ### Dockerized deploy
 
@@ -189,6 +189,6 @@ As an example, here's how to configure MetaMask to connect to your local testnet
 | Chain ID        | 808080                                          |
 | Currency Symbol | APPL                                            |
 
-<figure><img src="https://github.com/SparqNet/sparq-docs/raw/main/Sparq_en-US/ch3/img/MetamaskNetworkConfiguration.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/metamask (1).png" alt=""><figcaption></figcaption></figure>
 
 Once you're connected, import the following private key for the chain owner account: `0xe89ef6409c467285bcae9f80ab1cfeb3487cfe61ab28fb7d36443e1daa0c2867`. This account contains 1000 APPL Tokens from the get go and is able to call the `ContractManager` contract.

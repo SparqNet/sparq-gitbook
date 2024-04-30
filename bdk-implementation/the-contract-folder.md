@@ -6,21 +6,17 @@ description: The base for smart contract support in Blockchain Development Kit (
 
 This subchapter contains a brief overview of each one of the components inside the `src/contract` folder.
 
-## ABI
+<figure><img src="../.gitbook/assets/contract-folder.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/ABI.png" alt=""><figcaption></figcaption></figure>
+## ABI
 
 The `abi.h` file contains the **ABI** namespace - helper functions for handling Solidity ABI types and data natively, as well as the encoding and decoding of said data, also used for C++ <-> EVM inter-operability.
 
 ## BaseContract
 
-<figure><img src="../.gitbook/assets/Contract.png" alt=""><figcaption></figcaption></figure>
-
 The `contract.h` file contains the **BaseContract** class - the base from which all smart contracts are derived - as well as the **ContractGlobals** and **ContractLocals** helper classes that provide access to global and local variables, respectively, for those contracts to work.
 
 ## ContractFactory
-
-<figure><img src="../.gitbook/assets/ContractFactory.png" alt=""><figcaption></figcaption></figure>
 
 The `contractfactory.h` file contains the **ContractFactory** namespace - helper functions for aiding contract creation, typically used by ContractManager.
 
@@ -30,8 +26,6 @@ The `contracthost.h` file contains the **ContractHost** class - responsible for 
 
 ## ContractManager
 
-<figure><img src="../.gitbook/assets/ContractManager.png" alt=""><figcaption></figcaption></figure>
-
 The `contractmanager.h` contains the **ContractManager** class - responsible solely for creating and deploying contracts, passing their ownership to State when done.
 
 ## ContractStack
@@ -40,33 +34,22 @@ The `contractstack.h` file contains the **ContractStack** class - responsible fo
 
 ## CustomContracts
 
-<figure><img src="../.gitbook/assets/CustomContracts.png" alt=""><figcaption></figcaption></figure>
-
 The `customcontracts.h` file contains a tuple that holds all the registered contracts within the blockchain. It is also used as a reference for generating the ABI of said contracts.
 
 ## DynamicContract
 
-<figure><img src="../.gitbook/assets/DynamicContract.png" alt=""><figcaption></figcaption></figure>
-
-The `dynamiccontract.h` file contains the **DynamicContract** class - the base from which all Dynamic Contracts are derived (while *BaseContract* is mainly used for Protocol Contracts).
+The `dynamiccontract.h` file contains the **DynamicContract** class - the base from which all Dynamic Contracts are derived (while _BaseContract_ is mainly used for Protocol Contracts).
 
 ## Event and EventManager
 
-<figure><img src="../.gitbook/assets/Event.png" alt=""><figcaption></figcaption></figure>
-
 The `event.h` file contains the **Event** and **EventManager** classes, as well as the **EventContainer** typedef for indexing - they represent the subset of contract functionality related to Solidity events.
 
-*Event* is responsible for abstracting a Solidity event's structure and data, while *EventManager* is responsible for maintaining all emitted events within the blockchain. Events are supported for both C++ and EVM contracts.
+_Event_ is responsible for abstracting a Solidity event's structure and data, while _EventManager_ is responsible for maintaining all emitted events within the blockchain. Events are supported for both C++ and EVM contracts.
 
 ## The variables subfolder
-
-<figure><img src="../.gitbook/assets/Variables.png" alt=""><figcaption></figcaption></figure>
 
 The `variables` subfolder contains implementations for SafeVariables - special classes that abstract safe versions of variables used within contracts.
 
 ## The templates subfolder
 
-<figure><img src="../.gitbook/assets/Templates.png" alt=""><figcaption></figcaption></figure>
-
 The `templates` subfolder contains several contracts used as templates, examples and for internal testing purposes. It's also meant to be the folder where user-coded contracts are stored.
-

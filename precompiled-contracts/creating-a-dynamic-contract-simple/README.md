@@ -12,8 +12,6 @@ First we need to create the contract's header (`.h`) and source (`.cpp`) files, 
 
 Go to your local testnet's root folder, into the `src/contract/templates` subfolder, and create two new files - `simplecontract.h` and `simplecontract.cpp`. Those files will contain the declaration and definition of your contract's logic, respectively.
 
-<figure><img src="../../.gitbook/assets/CreateSimpleContractFiles.gif" alt=""><figcaption><p>Creating the header and source files for the contract</p></figcaption></figure>
-
 Then, add both files to the `CMakeLists.txt` file in the same folder, so they can be compiled with the project:
 
 ```cmake

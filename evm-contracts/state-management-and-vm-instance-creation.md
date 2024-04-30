@@ -6,7 +6,7 @@ description: How the AppLayer ecosystem manages the blockchain state alongside a
 
 The VM itself is owned and instantiated by the `State` class, which reflects a crucial design decision: centralizing virtual machine resource management like this ensures that each contract execution context is cleanly managed and isolated. Whenever a new transaction or contract call needs to be executed, regardless of its nature (be it an EVM/C++ contract execution or a simple native transfer), the `State` class is responsible for instantiating a new `ContractHost` object with the relevant parameters required for execution:
 
-```c++
+```cpp
 ContractHost(
   evmc_vm* vm,
   EventManager& eventManager,
@@ -25,7 +25,7 @@ Once an instance of `ContractHost` is created, it offers methods like `execute()
 
 `ContractHost` also extends the functionalities of `evmc::Host` by overriding several key functions that interface directly with the Ethereum Virtual Machine, which are obligatory for the VM to interact with the State:
 
-```c++
+```cpp
 bool account_exists(const evmc::address& addr) const noexcept final;
 evmc::bytes32 get_storage(const evmc::address& addr, const evmc::bytes32& key) const noexcept final;
 evmc_storage_status set_storage(const evmc::address& addr, const evmc::bytes32& key, const evmc::bytes32& value) noexcept final;

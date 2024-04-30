@@ -6,13 +6,13 @@ description: How contract calls happen from the EVM side in AppLayer.
 
 For calls from the EVM to another contract, the `ContractHost::call()` function plays a crucial role. It is tasked with creating and handling calls to other contracts, encapsulating the complexity of contract interaction within a simple interface:
 
-```c++
+```cpp
 evmc::Result call(const evmc_message& msg) noexcept final;
 ```
 
 This function is designed to handle both C++ and EVM contract calls, as shown below:
 
-```c++
+```cpp
 evmc::Result ContractHost::call(const evmc_message& msg) noexcept {
   Address recipient(msg.recipient);
   auto &recipientAccount = *accounts_[recipient]; // We need to take a reference to the account, not a reference to the pointer.
@@ -44,4 +44,3 @@ evmc::Result ContractHost::call(const evmc_message& msg) noexcept {
   return result;
 }
 ```
-

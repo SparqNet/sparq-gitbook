@@ -40,16 +40,14 @@ There are also specific contracts that only exist for internal testing purposes 
 
 ## Managing contracts
 
-Contracts in the AppLayer network are managed by a few classes working together:
+Contracts in the AppLayer network are managed by a few classes working together (check the `src/core` and `src/contract` folders for more info on each class):
 
-* `State` is responsible for owning all the Dynamic Contracts registered in the blockchain (which you can get a list of by calling the class' `getCppContracts()` and/or `getEVMContracts()` functions, depending on which ones you need), as well as their global variables (name, address, owner, balances, events, etc.)
-* `ContractManager` is responsible for solely creating and registering the contracts, then passing them to State (with the `ContractFactory` namespace providing helper functions to do so)
-* `ContractHost` is responsible for allowing contracts to interact with each other and to enable them to modify balances - this kind of inter-communication is done by intercepting calls of functions from registered contracts (if the functor/signature matches), which is done through either an `eth_call` request or a transaction processed from a block
-* `ContractStack` is responsible for managing alterations of data, like contract variables and account balances during nested contract call chains, by keeping a stack of changes made during a contract call, and automatically committing or reverting them in the account state when required (for non-view functions)
+* `State`  (`src/core/state.h`) is responsible for owning all the Dynamic Contracts registered in the blockchain (which you can get a list of by calling the class' `getCppContracts()` and/or `getEVMContracts()` functions, depending on which ones you need), as well as their global variables (name, address, owner, balances, events, etc.)
+* `ContractManager` (`src/contract/contractmanager.h`) is responsible for solely creating and registering the contracts, then passing them to State (with the `ContractFactory` namespace providing helper functions to do so)
+* `ContractHost` (`src/contract/contracthost.h`) is responsible for allowing contracts to interact with each other and to enable them to modify balances - this kind of inter-communication is done by intercepting calls of functions from registered contracts (if the functor/signature matches), which is done through either an `eth_call` request or a transaction processed from a block
+* `ContractStack` (`src/contract/contractstack.h`) is responsible for managing alterations of data, like contract variables and account balances during nested contract call chains, by keeping a stack of changes made during a contract call, and automatically committing or reverting them in the account state when required (for non-view functions)
 
-<figure><img src="../.gitbook/assets/ContractManager (1) (1).png" alt=""><figcaption><p>Source files for ContractManager</p></figcaption></figure>
-
-The `ContractManager` class (declared in `src/contract/contractmanager.h`) is itself a *Protocol Contract*, but it does not own or create any Protocol Contracts. Instead, they are created during blockchain initialization, and a reference to each of them is stored within the class, allowing it to access them directly. Dynamic Contracts, however, are fully owned and stored by State in an internal map. This ensures that each contract has a unique address, which is derived using a similar scheme as an EVM.
+The `ContractManager` class is itself a _Protocol Contract_, but it does not own or create any Protocol Contracts. Instead, they are created during blockchain initialization, and a reference to each of them is stored within the class, allowing it to access them directly. Dynamic Contracts, however, are fully owned and stored by State in an internal map. This ensures that each contract has a unique address, which is derived using a similar scheme as an EVM.
 
 Because of this, we don't necessarily need to know the type of the contract stored within the pointer, only during either creating it or loading it from the database. This is why all contracts inherit the `BaseContract` class, as it contains a `name_` variable specifying the name of the contract. This name must be the same as the name of the class, as it is used to identify the contract during loading and creation.
 

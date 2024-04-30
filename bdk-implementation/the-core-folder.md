@@ -6,9 +6,9 @@ description: The heart of the Blockchain Development Kit (BDK).
 
 This subchapter contains a brief overview of each one of the components inside the `src/core` folder.
 
-## Blockchain and Syncer
+<figure><img src="../.gitbook/assets/core-folder.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/Blockchain.png" alt=""><figcaption></figcaption></figure>
+## Blockchain and Syncer
 
 The `blockchain.h` file contains the **Blockchain** and **Syncer** classes.
 
@@ -29,13 +29,9 @@ The `consensus.h` file contains the **Consensus** class - responsible for proces
 
 ## rdPoS
 
-<figure><img src="../.gitbook/assets/rdPoS.png" alt=""><figcaption></figcaption></figure>
-
-The `rdpos.h` file contains the **rdPoS** class - the implementation of the *Random Deterministic Proof of Stake* algorithm used by the AppLayer network - as well as the **rdPoSWorker** and **Validator** classes. rdPoS is also considered a smart contract, but remains part of the AppLayer core protocol.
+The `rdpos.h` file contains the **rdPoS** class - the implementation of the _Random Deterministic Proof of Stake_ algorithm used by the AppLayer network - as well as the **rdPoSWorker** and **Validator** classes. rdPoS is also considered a smart contract, but remains part of the AppLayer core protocol.
 
 ## State
-
-<figure><img src="../.gitbook/assets/State.png" alt=""><figcaption></figcaption></figure>
 
 The `state.h` file contains the **State** class - an abstraction of the blockchain's current state of accounts, balances, nonces, transactions, token balances, deployed contracts and emitted events at the current block in the network, responsible for owning and maintaining all of those and a few other shared inner variables.
 
@@ -50,8 +46,6 @@ Not all functions from the class update the state. Check the [Doxygen](https://d
 
 ## Storage
 
-<figure><img src="../.gitbook/assets/Storage.png" alt=""><figcaption></figcaption></figure>
-
 The `storage.h` file contains the **Storage** class - an abstraction of the blockchain's history, maintaining a collection of blocks approved and validated by the network, other nodes, or itself through time. Those blocks store transactions, contracts, accounts, and can't be altered once they're in the blockchain, only searched for or read from.
 
 On node initialization, a history of up to 1000 of the most recent blocks is loaded into memory. Those blocks were stored in a previous initialization in the database. If there are no blocks (e.g. the blockchain was just deployed and initialized for the first time), a "genesis" block is automatically created and loaded in memory.
@@ -64,9 +58,8 @@ Searching for and reading from blocks in history is done in several places in th
 
 The `dump.h` file contains the **Dumpable**, **DumpManager** and **DumpWorker** classes - together they are responsible for dumping the blockchain's components from memory to disk when required (e.g. blocks, transactions, contracts, the state itself, etc.)
 
-*Dumpable* is an abstraction of a dumpable object - that is, any component that inherits it is able to dump itself to disk. All classes that inherit it must implement their own dumping routine accordingly.
+_Dumpable_ is an abstraction of a dumpable object - that is, any component that inherits it is able to dump itself to disk. All classes that inherit it must implement their own dumping routine accordingly.
 
-*DumpManager* is the class that manages a list of Dumpable components in the blockchain, iterating through each of them and dumping them one by one when told to.
+_DumpManager_ is the class that manages a list of Dumpable components in the blockchain, iterating through each of them and dumping them one by one when told to.
 
-*DumpWorker* acts as a worker thread for DumpManager, doing the actual work of dumping each Dumpable component sent by DumpManager in a separate thread. This allows for parallel dumps, speeding up the process significantly, which is important when there are many objects or particularly heavy ones (e.g. State) that need to be dumped ASAP without hanging the entire blockchain.
-
+_DumpWorker_ acts as a worker thread for DumpManager, doing the actual work of dumping each Dumpable component sent by DumpManager in a separate thread. This allows for parallel dumps, speeding up the process significantly, which is important when there are many objects or particularly heavy ones (e.g. State) that need to be dumped ASAP without hanging the entire blockchain.
