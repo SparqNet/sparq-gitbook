@@ -16,7 +16,7 @@ You're able to tweak almost everything related to the BDK. We offer pre-existing
 
 ## Forking
 
-Head over to the [GitHub repository](https://github.com/SparqNet/orbitersdk-cpp) and click the "Fork" button. After that, you can clone your forked repository with `git clone` and start developing on your own local blockchain.
+Head over to the [GitHub repository](https://github.com/AppLayerLabs/bdk-cpp) and click the "Fork" button. After that, you can clone your forked repository with `git clone` and start developing on your own local blockchain.
 
 <figure><img src="https://github.com/SparqNet/sparq-docs/raw/main/Sparq_en-US/ch3/img/ForkButton.png" alt=""><figcaption><p>Go on and fork it!</p></figcaption></figure>
 
@@ -32,9 +32,9 @@ Fork the project and clone your forked repository:
 
 ```bash
 # Clone your repository
-git clone https://github.com/YOUR_USER_NAME/orbitersdk-cpp.git
+git clone https://github.com/YOUR_USER_NAME/bdk-cpp.git
 # Go to the project directory
-cd orbitersdk-cpp
+cd bdk-cpp
 # Switch to a branch for contract development on latest release (main branch)
 git checkout -b contract-development main
 ```
@@ -48,24 +48,24 @@ Then, install Docker on your system (if you don't have it installed already). In
 Once Docker is installed, go to the root directory of your cloned repository (where the `Dockerfile` is located), and run the following command (if you're on Linux or Mac, use `sudo`):
 
 ```bash
-docker build -t orbitersdk-cpp-dev:latest .
+docker build -t bdk-cpp-dev:latest .
 ```
 
-This will build the image and tag it as `orbitersdk-cpp-dev:latest`. You can change the tag to whatever you want, but remember to change it at the next step.
+This will build the image and tag it as `bdk-cpp-dev:latest`. You can change the tag to whatever you want, but remember to change it at the next step.
 
 After building the image, run it with the following command (again, if using Linux or Mac, run as `sudo`):
 
 ```bash
 # For Linux/Mac
-docker run -it -v $(pwd):/orbitersdk-volume -p 8080-8099:8080-8099 -p 8110-8111:8110-8111 orbitersdk-cpp-dev:latest
+docker run -it -v $(pwd):/orbitersdk-volume -p 8080-8099:8080-8099 -p 8110-8111:8110-8111 bdk-cpp-dev:latest
 # For Windows
-docker run -it -v %cd%:/orbitersdk-volume -p 8080-8099:8080-8099 -p 8110-8111:8110-8111 orbitersdk-cpp-dev:latest
+docker run -it -v %cd%:/orbitersdk-volume -p 8080-8099:8080-8099 -p 8110-8111:8110-8111 bdk-cpp-dev:latest
 ```
 
 where:
 
 * `$(pwd)` or `%cd%` is the absolute/full path to your repository's folder
-* `:/orbitersdk-volume` is the path inside the container where the BDK will be mounted. This volume is synced with the `orbitersdk-cpp` folder inside the container
+* `:/orbitersdk-volume` is the path inside the container where the BDK will be mounted. This volume is synced with the `bdk-cpp` folder inside the container
 * The `-p` flags expose the ports used by the nodes - the example exposes the default ports 8080-8099 and 8110-8111, if you happen to use different ports, change them accordingly
 
 When running the container, you will be logged in as the root user and will be able to develop, build and deploy the network within the container. Remember that we are using our local repo as a volume, so every change in the local folder will be reflected to the container in real time, and vice-versa (so you can develop outside and use the container only for build and deploy). You can also integrate the container with your favorite IDE or editor.
@@ -112,9 +112,9 @@ Clone your forked repository by following the steps below:
 
 ```bash
 # Clone your repository
-git clone https://github.com/YOUR_USER_NAME/orbitersdk-cpp.git
+git clone https://github.com/YOUR_USER_NAME/bdk-cpp.git
 # Go to the project directory
-cd orbitersdk-cpp
+cd bdk-cpp
 # Switch to a branch for contract development on latest release (main branch)
 git checkout -b contract-development main
 ```

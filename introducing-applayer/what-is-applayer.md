@@ -6,7 +6,7 @@ description: The light at the end of the tunnel
 
 The AppLayer Network is made up of three parts:
 
-* A Blockchain Development Kit (hereby denominated [**BDK**](https://github.com/SparqNet/orbitersdk-cpp)), with extensive documentation for developers to easily build their own AppLayer's with unprecedented freedom
+* A Blockchain Development Kit (hereby denominated [**BDK**](https://github.com/AppLayerLabs/bdk-cpp)), with extensive documentation for developers to easily build their own AppLayer's with unprecedented freedom
 * An EVM network built on top of the Blockchain Development Kit which enables builders to deploy EVM smart contracts and scale with C++ stateful pre-compiles
 * A network that allows the bridging of data and assets between these app-specific chains and external chains we call the Chain Abstraction Network (**CAN**)
 

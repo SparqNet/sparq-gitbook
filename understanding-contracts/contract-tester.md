@@ -4,14 +4,14 @@ description: A web application for testing your contracts.
 
 # Contract Tester
 
-Sparq Labs has developed a web application called [Contract Tester](https://github.com/SparqNet/contract-tester), for testing the logic of customized contracts in a simple, fast and intuitive way.
+We have developed a web application called [Contract Tester](https://github.com/AppLayerLabs/contract-tester), for testing the logic of customized contracts in a simple, fast and intuitive way.
 
 ## Cloning the repository
 
 First, clone the repository to your local device:
 
 ```bash
-git clone https://github.com/SparqNet/contract-tester
+git clone https://github.com/AppLayerLabs/contract-tester
 cd contract-tester
 ```
 
@@ -61,7 +61,7 @@ npm install next react@latest react-dom
 Then, clone the repository, install the yarn dependencies and run the project:
 
 ```bash
-git clone https://github.com/SparqNet/contract-tester.git
+git clone https://github.com/AppLayer/contract-tester.git
 cd contract-tester
 yarn install
 yarn build
