@@ -52,7 +52,7 @@
   * [Executing contract calls via EVMC](evm-contracts/executing-contract-calls-via-evmc.md)
   * [Calling EVM contracts from C++](evm-contracts/calling-evm-contracts-from-cpp.md)
   * [Calling C++ contracts from EVM](evm-contracts/calling-cpp-contracts-from-evm.md)
+* [Getting started with AppLayer Testnet](getting-started-with-applayer-testnet.md)
 * [Join our Community](join-our-community.md)
 * [Get in Touch](get-in-touch.md)
 * [Glossary](glossary.md)
-
