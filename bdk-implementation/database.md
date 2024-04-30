@@ -35,6 +35,7 @@ We also have a `DBPrefix` namespace to reference the database's prefixes in a si
 | contractManager | 0x0007 |
 | events          | 0x0008 |
 | vmStorage       | 0x0009 |
+| txToAddr        | 0x000A |
 
 Those prefixes are concatenated to the start of the _key_, so an entry that would have, for example, a key named "abc" and a value of "123", if inserted to the "0003" prefix, would be like this inside the database (in raw bytes format, strings here are just for the sake of the explanation): `{"0003abc": "123"}`
 
@@ -130,4 +131,12 @@ Used to store EVM-related stuff like storage keys and values (essentially the EV
 | Key                                         | Value                    |
 | ------------------------------------------- | ------------------------ |
 | Address (20 bytes) + Storage Key (32 bytes) | Storage Value (32 bytes) |
+
+### txToAddr
+
+Used to store EVM transactions that created contracts, storing the transaction hash and the address where the contract was deployed.
+
+| Key                      | Value              |
+| ------------------------ | ------------------ |
+| Prefix + TransactionHash | ContractAddress    |
 
