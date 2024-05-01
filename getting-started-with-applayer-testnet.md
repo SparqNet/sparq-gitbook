@@ -23,7 +23,7 @@ Here's a video showing the configuration on MetaMask as an example:
 
 ### Step 2 - Claiming your AppLayer Tokens
 
-To claim your APPL tokens on the testnet, contact our staff directly for now. We're currently working on a faucet site that will make this process more straight-forward in the future.
+To claim your APPL tokens on the testnet, reach out to our staff on Discord (see "Join our Community") and open a ticket there. We're currently working on a faucet site that will make this process more straight-forward in the future.
 
 ### Step 3 - Deploying C++ contracts
 
