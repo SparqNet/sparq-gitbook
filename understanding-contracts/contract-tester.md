@@ -21,7 +21,7 @@ As you're testing the interaction of your customized contracts with the AppLayer
 
 **Deploying the application**
 
-You can deploy the web application in two ways: *using Docker*, or *manually*.
+You can deploy the web application in two ways: _using Docker_, or _manually_.
 
 ### Using Docker (recommended)
 
@@ -72,7 +72,7 @@ yarn start
 
 You should now be able to access the contract tester through `http://localhost:3000` (or the port you chose in the previous step). The application should look like this:
 
-<figure><img src="../.gitbook/assets/ContractTesterMainPage (1).png" alt=""><figcaption><p>Main page of the application</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/TESTER_01.png" alt=""><figcaption><p>Main page of the application</p></figcaption></figure>
 
 When you open the home page, it'll automatically ask for you to connect to MetaMask. You can also click on the "Connect MetaMask" button on the bottom of the left sidebar to do it manually.
 
@@ -87,7 +87,7 @@ If you want to use the default contract, just type the required parameters for t
 * `DECIMALS`: 10
 * `SUPPLY`: 100
 
-<figure><img src="../.gitbook/assets/ContractTesterContractManager (1).png" alt=""><figcaption><p>Calling a function from Contract Manager</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/TESTER_02.png" alt=""><figcaption><p>Calling a function from Contract Manager</p></figcaption></figure>
 
 After that, you should wait for the transaction to be mined and the contract to be created. You can check the transaction status on MetaMask. After the transaction is mined, you can click on the "getDeployedContracts" button to see the address of the contract you just created:
 
@@ -100,7 +100,7 @@ If you want to create a custom version of `ContractManager`, you will need to fo
 3. Add the custom contract's ABI by clicking the button next to the "Enter your own JSON ABI" label, choosing your JSON ABI file, and then clicking "Upload"
 4. Finally, click the “Get Functions” button to show the custom contract's functions and input fields
 
-**NOTE**: we do *not* advise you remove the “getDeployedContracts” function on any custom contract implementations you create. We have a statically placed table at the end of the page for quick reference to all the contracts deployed on the network by the contract manager. Use this to quickly fetch the addresses of deployed contracts to be able to interact with them.
+**NOTE**: we do _not_ advise you remove the “getDeployedContracts” function on any custom contract implementations you create. We have a statically placed table at the end of the page for quick reference to all the contracts deployed on the network by the contract manager. Use this to quickly fetch the addresses of deployed contracts to be able to interact with them.
 
 ### Custom Contract
 
@@ -263,6 +263,6 @@ Now, you can click on the "ABI" button to copy the ABI JSON structure of the `Si
 
 Now, you can use the Contract Tester to interact with the deployed `SimpleContract`. First, you need to get the address of the deployed contract. You can do that by going to the Contract Manager tab and clicking on the "Get Deployed Contracts" button. Remember that we already did this step and our contract address is `0x5b41CEf7F46A4a147e31150c3c5fFD077e54d0e1`. Then, go to the Custom Contract tab and paste the address in the "Contract Address" field. After that, you can upload the ABI JSON file and click on the "Get Functions" button. You should see something like this:
 
-<figure><img src="../.gitbook/assets/SimpleContractTest (2).png" alt=""><figcaption><p>Testing calls to a custom contract</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/TESTER_03.png" alt=""><figcaption><p>Testing calls to a custom contract</p></figcaption></figure>
 
 Now you can interact with the contract. You can set the name and value by using the "setName" and "setValue" functions, and get the name and value by using the "getName" and "getValue" functions. You can also check the transactions on Metamask.
