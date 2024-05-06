@@ -58,7 +58,7 @@ Our three variables `name_`, `number_` and `tuple_` are respectively declared as
 
 Functions in general can return either `void` or an ABI-supported C++ type (see the correlation on Solidity ABI). The main difference between both is that **view** functions MUST be `const` (e.g. `getName() const;`), while **non-view** functions MUST NOT be `const` (e.g. `setName(std::string name);`).
 
-For the two registering functions, `registerContract()` MUST be `public static void`, and `registerContractFunctions()` MUST be `private void override`.
+For the two registering functions, `registerContract()` MUST be `public static void`, and `registerContractFunctions()` MUST be `private void override`. For the `dump()` function, it MUST be `const override` and return a `DBBatch` object.
 
 ```cpp
 class SimpleContract : public DynamicContract {
@@ -79,16 +79,16 @@ class SimpleContract : public DynamicContract {
     static void registerContract() {
       ...
     }
+
+    DBBatch dump() const override;
 };
 ```
 
 Just like with the tuple variable, we can use primitive types and returns on functions just fine, for the same reasons stated above. This also extends to constructors, whch we'll see below.
 
-## Declaring the Contract Constructor and Destructor
+## Declaring the Contract Constructor
 
-Like any C++ derived class, we must call its base class constructor and pass the proper arguments to it (besides the arguments for the derived class itself) so it can be constructed properly.
-
-Any contract derived from `DynamicContract` MUST have a destructor marked as `override` (so the compiler knows we are overriding the base class destructor and can properly call it), AND two constructors (one for creating a new contract from scratch, and another for loading the contract from the database).
+Like any C++ derived class, we must call its base class constructor and pass the proper arguments to it (besides the arguments for the derived class itself) so it can be constructed properly. Any contract derived from `DynamicContract` MUST have *two* constructors - one for creating a new contract from scratch, and another for loading the contract from the database:
 
 ```cpp
 class SimpleContract : public DynamicContract {
@@ -99,22 +99,16 @@ class SimpleContract : public DynamicContract {
       const std::string& name,
       uint256_t number,
       const std::tuple<std::string, uint256_t>& tuple,
-      ContractManagerInterface &interface,
       const Address& address,
       const Address& creator,
-      const uint64_t& chainId,
-      const std::unique_ptr<DB> &db
+      const uint64_t& chainId
     );
 
     // Constructor from load. Load contract from database.
     SimpleContract(
-      ContractManagerInterface &interface,
       const Address& address,
       const std::unique_ptr<DB> &db
     );
-
-    // Destructor.
-    ~SimpleContract() override;
 
     // ...
 }
@@ -126,26 +120,22 @@ Aside from our `name`, `number` and `tuple` variables, both constructors also ta
 // Constructor that creates the contract from scratch
 DynamicContract(
   const std::string& contractName,
-  ContractManagerInterface &interface,
   const Address& address,
   const Address& creator,
-  const uint64_t& chainId,
-  const std::unique_ptr<DB> &db
-);
+  const uint64_t& chainId
+) : BaseContract(contractName, address, creator, chainId) {};
 
 // Constructor that loads the contract from the database
 DynamicContract(
-  ContractManagerInterface &interface,
   const Address& address,
   const std::unique_ptr<DB> &db
-);
+) : BaseContract(address, db) {};
 ```
 
-`interface`, `address`, `creator`, `chainId` and `db` are internal variables used by the base class, and should _always_ be declared _last_. They are equivalent to:
+`address`, `creator`, `chainId` and `db` are internal variables used by the base class, and should _always_ be declared _last_. They are equivalent to:
 
 | DynamicContract constructor argument | Taken from                                  |
 | ------------------------------------ | ------------------------------------------- |
-| interface                            | this->interface                             |
 | address                              | derived using this->deriveContractAddress() |
 | creator                              | this->getCaller()                           |
 | chainId                              | this->options->getChainID()                 |
