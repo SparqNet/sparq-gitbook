@@ -11,7 +11,7 @@ When creating precompiled contracts for AppLayer, there are a few rules that mus
 As a general stance, contracts must:
 
 * Inherit from their respective base class, depending on their type (see below) and make sure you're passing the right arguments for their constructors
-* Implement, initialize and manage variables within the state and database during contract construction (loading) _and_ destruction (saving), and the required view and non-view functions that manage them
+* Implement, initialize and manage variables within the state and database, as well as the respective view and non-view functions that manage them when required - those variables should be loaded during contract construction and saved by means of an overriden dump function
 * Register callbacks for contract functions with their proper functors/signatures (if functions are called by an RPC `eth_call` or a transaction)
 * Ensure that their assigned name and their own class name match - both contract constructors take a `contractName` string as an argument, i.e. if your contract is called "TestContract", your constructor's definition would be `TestContract(...) : DynamicContract(interface, "TestContract", ...)` - _both names HAVE to match_, otherwise a segfault may happen
 * Declare view functions, non-view functions and events (if they exist) correctly, accoding to their specific types (explained further)
@@ -33,6 +33,7 @@ Dynamic Contracts specifically must:
 * Only allow contract creation through a transaction call to the `ContractManager` contract
 * Develop functions for handling your contract's creation and logic
 * Override `ethCall()` functions to register and properly call those functions
+* Override the `dump()` function to properly save the contract's variables in the database
 * Set **all** of the contract's internal variables as `private`, inherit them from one of the many SafeVariable classes, and always reference them with `this` to ensure correct semantics - e.g. `string name` and `uint256 value` in Solidity should be `SafeString name` and `SafeUint256_t value` in C++, respectively - referencing them in your definition would be `this->name`, `this->value`, so on and so forth
 * Allow loops using containers such as `SafeUnorderedMap`, but keep in mind how safe containers work
   * e.g. when you access a key from a `SafeUnorderedMap`, it'll check if it exists and copy _only_ the key, not the entire map or its value - thus when iterating a loop, you can't assume the "temporary" value is the original one

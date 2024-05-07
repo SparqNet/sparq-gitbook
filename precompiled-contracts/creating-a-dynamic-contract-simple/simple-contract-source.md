@@ -6,11 +6,11 @@ description: Coding the Simple Contract's source file
 
 With the `SimpleContract` header, declarations and (most of the) registering done, now we can proceed to the implementation itself.
 
-## Defining the Contract Constructors and Destructor
+## Defining the Contract Constructors and Dump Function
 
 Open the source file (`simplecontract.cpp`) and `#include "simplecontract.h"` right at the beginning.
 
-The first thing we'll implement is the destructor and constructors of our contract class. The implementation must follow a certain order of events:
+The first thing we'll implement is the constructors and dumping function of our contract class. The implementation must follow a certain order of events:
 
 * The base `DynamicContract` constructor must be called and its respective arguments must be passed in order
 * Contract SafeVariables must be accessed with `this` (e.g. `this->name`) and initialized accordingly with their values if necessary (e.g. directly from the constructor, or by fetching values from the database)
@@ -28,12 +28,10 @@ SimpleContract::SimpleContract(
   const std::string& name,
   const uint256_t& number,
   const std::tuple<std::string, uint256_t>& tuple,
-  ContractManagerInterface &interface,
   const Address& address,
   const Address& creator,
-  const uint64_t& chainId,
-  const std::unique_ptr<DB> &db
-) : DynamicContract(interface, "SimpleContract", address, creator, chainId, db),
+  const uint64_t& chainId
+) : DynamicContract("SimpleContract", address, creator, chainId),
   name_(this), number_(this), tuple_(this)
 {
   this->name_ = name;
@@ -52,15 +50,14 @@ SimpleContract::SimpleContract(
 }
 
 SimpleContract::SimpleContract(
-  ContractManagerInterface &interface,
   const Address& address,
-  const std::unique_ptr<DB> &db
-) : DynamicContract(interface, address, db), name_(this), value_(this), tuple_(this) {
-  this->name_ = Utils::bytesToString(db->get(std::string("name_"), this->getDBPrefix()));
-  this->number_ = Utils::bytesToUint256(db->get(std::string("number_"), this->getDBPrefix()));
+  const DB& db
+) : DynamicContract(address, db), name_(this), number_(this), tuple_(this) {
+  this->name_ = Utils::bytesToString(db.get(std::string("name_"), this->getDBPrefix()));
+  this->number_ = Utils::bytesToUint256(db.get(std::string("number_"), this->getDBPrefix()));
   this->tuple_ = std::make_tuple(
-    Utils::bytesToString(db->get(std::string("tuple_name"), this->getDBPrefix())),
-    Utils::bytesToUint256(db->get(std::string("tuple_number"), this->getDBPrefix()))
+    Utils::bytesToString(db.get(std::string("tuple_name"), this->getDBPrefix())),
+    Utils::bytesToUint256(db.get(std::string("tuple_number"), this->getDBPrefix()))
   );
 
   this->name_.commit();
@@ -74,17 +71,20 @@ SimpleContract::SimpleContract(
   this->tuple_.enableRegister();
 }
 
-SimpleContract::~SimpleContract() {
-  this->db_->put(std::string("name_"), Utils::stringToBytes(this->name_.get()), this->getDBPrefix());
-  this->db_->put(std::string("number_"), Utils::uint256ToBytes(this->number_.get()), this->getDBPrefix());
-  this->db_->put(std::string("tuple_name"), Utils::stringToBytes(get<0>(this->tuple_)), this->getDBPrefix());
-  this->db_->put(std::string("tuple_number"), Utils::uint256ToBytes(get<1>(this->tuple_)), this->getDBPrefix());
+
+DBBatch SimpleContract::dump() const {
+  DBBatch dbBatch;
+  dbBatch.push_back(Utils::stringToBytes("name_"), Utils::stringToBytes(this->name_.get()), this->getDBPrefix());
+  dbBatch.push_back(Utils::stringToBytes("number_"), Utils::uint256ToBytes(this->number_.get()), this->getDBPrefix());
+  dbBatch.push_back(Utils::stringToBytes("tuple_name"), Utils::stringToBytes(get<0>(this->tuple_)), this->getDBPrefix());
+  dbBatch.push_back(Utils::stringToBytes("tuple_number"), Utils::uint256ToBytes(get<1>(this->tuple_)), this->getDBPrefix());
+  return dbBatch;
 }
 ```
 
 Notice that, in the first constructor, we use `SimpleContract` as the `contractName` argument in the base `DynamicContract` constructor. As stated in the previous subchapter, this match is a **requirement**, otherwise it will result in a segfault. Both constructors initialize the inner variables of the contract - the first one using the arguments directly, and the second one loading them directly from the database.
 
-The destructor is responsible for saving the contract variables to the database, so that they can be loaded later by the second constructor, when `ContractManager` is being constructed. `getDBPrefix()` is a getter for the contract's own prefix in the database, which would be equivalent to `DBPrefix::contracts` + the contract's address.
+The dumping function is called periodically and is responsible for collecting the contract variables' values and send them back to `DumpManager`, which will save those values in the database so that they can be loaded later by the second constructor, when `ContractManager` is being constructed. `getDBPrefix()` is a getter for the contract's own prefix in the database, which would be equivalent to `DBPrefix::contracts` + the contract's address.
 
 Keep in mind that **the database stores data as raw bytes** - this is why we use the respective conversion functions from Utils when saving (`XyzToBytes()`) and loading (`bytesToXyz()`) variables.
 
