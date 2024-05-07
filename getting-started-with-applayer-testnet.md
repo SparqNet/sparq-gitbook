@@ -23,7 +23,13 @@ Here's a video showing the configuration on MetaMask as an example:
 
 ### Step 2 - Claiming your AppLayer Tokens
 
-To claim your APPL tokens on the testnet, reach out to our staff on Discord (see "Join our Community") and open a ticket there. We're currently working on a faucet site that will make this process more straight-forward in the future.
+To claim your APPL tokens on the testnet, open our [testnet faucet website](https://testnet-faucet.applayer.com/), enter your testnet address there and click on the "Request Tokens" button.
+
+**Please note that MetaMask might take up to 5 minutes to update your balance.** If the faucet displays "Tokens requested and transferred successfully", the operation has been successful, so please be patient.
+
+Check this example video showing how to claim APPL tokens using a MetaMask address:
+
+{% file src=".gitbook/assets/applayer_step2.mp4" %}
 
 ### Step 3 - Deploying C++ contracts
 
