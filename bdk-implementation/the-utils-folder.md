@@ -8,11 +8,11 @@ This subchapter contains a brief overview of each one of the components inside t
 
 <figure><img src="../.gitbook/assets/utils-folder.png" alt=""><figcaption></figcaption></figure>
 
-## FinalizedBlock and MutableBlock
+## FinalizedBlock
 
-The `finalizedblock.h` and `mutableblock.h` files contain the **FinalizedBlock** and **MutableBlock** classes respectively - those abstract the structure of a block sent through the network and stored in the blockchain. The main difference is that a _mutable_ block can have its data changed at any point, while a _finalized_ block is inherently final and cannot be modified anymore once constructed.
+The `finalizedblock.h` file contains the **FinalizedBlock** class - an abstraction of the structure of a block sent through the network and stored in the blockchain. A finalized block is inherently *final* - it cannot be modified anymore after construction.
 
-The classes only contain the bare structure and data of a block - they don't do any kind of operation, validation or verification on it. _Mutable_ blocks are only used during operations involving rdPoS (e.g. State, Syncer and Validator operations), while _finalized_ blocks are used everywhere else in the project, especially in Storage, to ensure block state integrity across all nodes.
+The class only contains the bare structure and data of a block - it doesn't do any kind of operation, validation or verification on it. Having only finalized blocks across the entire project ensures block state integrity across all nodes.
 
 ## ContractReflectionInterface
 

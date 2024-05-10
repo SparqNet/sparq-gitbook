@@ -28,6 +28,7 @@ AppLayer's BDK provides ready-to-use templates for the following Dynamic Contrac
 There are also specific contracts that only exist for internal testing purposes and are not meant to be used as templates:
 
 * `SimpleContract` (template for a simple contract, used for both testing and teaching purposes)
+* `RandomnessTest` (template for testing random number generation)
 * `ERC721Test` (derivative contract meant to test the capabilities of the ERC721 template)
 * `TestThrowVars` (contract meant to test SafeVariable commit/revert functionality using exception throwing)
 * `ThrowTestA/B/C` (contracts meant to test nested call revert functionality)
@@ -60,7 +61,7 @@ Given the example Solidity contract:
 ```cpp
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
- 
+
 contract ExampleContract {
     mapping(address => uint256) values;c
     function setValue(address addr, uint256 value) external {
@@ -95,7 +96,7 @@ class ExampleContract : public DynamicContract {
 
 ```cpp
 #include "ExampleContract.h"
- 
+
 ExampleContract(
   const Address& contractAddress, const uint64_t& chainId,
   std::unique_ptr<ContractManager> &contractManager,
@@ -125,7 +126,7 @@ void ExampleContract::callContractWithTransaction(const Tx& transaction) {
     this->setValue(ABI::Decoder::decodeAddress(txData, 8), ABI::Decoder::decodeUint256(txData, 8 + 32));
   }
   return;
-}              
+}
 ```
 
 ## The BaseContract class

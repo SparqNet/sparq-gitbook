@@ -89,7 +89,7 @@ You can follow these steps to build the BDK in your own system. Dependencies are
 
 * **GCC** with support for **C++23** or higher
 * **CMake 3.19.0** or higher
-* **Boost 1.74** or higher (components: _chrono, filesystem, program-options, system, thread, nowide_)
+* **Boost 1.83** or higher (components: *chrono, filesystem, program-options, system, thread, nowide*)
 * **OpenSSL 1.1.1**
 * **CryptoPP 8.2.0** or higher
 * **libscrypt**
@@ -98,7 +98,19 @@ You can follow these steps to build the BDK in your own system. Dependencies are
 * **tmux** (for deploying)
 * (optional) **clang-tidy** for linting
 
-Here's a one-liner that should work on Debian 12 (Bookworm) or greater, as well as its derived distributions:
+The versions of those dependencies should suffice out-of-the-box for at least the following distros (or greater, including their derivatives):
+
+* **Debian 13 (Trixie)**
+* **Ubuntu 24.04 LTS (Noble Numbat)**
+* **Linux Mint 22 (Wilma)**
+* **Fedora 40**
+* Any rolling release distro from around **May 2024** onwards (check their repos to be sure)
+
+For older distros, you may need to compile some dependencies from source (specifically CMake and Boost). Make sure to uninstall them from the system first to prevent any version conflicts.
+
+#### One-liners
+
+* For APT-based distros:
 
 ```bash
 sudo apt install git build-essential cmake tmux clang-tidy autoconf libtool pkg-config libboost-all-dev libcrypto++-dev libscrypt-dev libsnappy-dev libssl-dev zlib1g-dev openssl
