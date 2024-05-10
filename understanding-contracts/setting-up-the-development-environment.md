@@ -89,7 +89,7 @@ You can follow these steps to build the BDK in your own system. Dependencies are
 
 * **GCC** with support for **C++23** or higher
 * **CMake 3.19.0** or higher
-* **Boost 1.83** or higher (components: *chrono, filesystem, program-options, system, thread, nowide*)
+* **Boost 1.83** or higher (components: _chrono, filesystem, program-options, system, thread, nowide_)
 * **OpenSSL 1.1.1**
 * **CryptoPP 8.2.0** or higher
 * **libscrypt**
@@ -97,6 +97,7 @@ You can follow these steps to build the BDK in your own system. Dependencies are
 * **libsnappy** for database compression
 * **tmux** (for deploying)
 * (optional) **clang-tidy** for linting
+* (optional) **mold** for faster/better linking
 
 The versions of those dependencies should suffice out-of-the-box for at least the following distros (or greater, including their derivatives):
 
@@ -113,7 +114,7 @@ For older distros, you may need to compile some dependencies from source (specif
 * For APT-based distros:
 
 ```bash
-sudo apt install git build-essential cmake tmux clang-tidy autoconf libtool pkg-config libboost-all-dev libcrypto++-dev libscrypt-dev libsnappy-dev libssl-dev zlib1g-dev openssl
+sudo apt install git build-essential cmake mold tmux clang-tidy autoconf libtool pkg-config libboost-all-dev libcrypto++-dev libscrypt-dev libsnappy-dev libssl-dev zlib1g-dev openssl
 ```
 
 ## Compiling
