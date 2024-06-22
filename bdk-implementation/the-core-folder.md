@@ -15,11 +15,12 @@ The `blockchain.h` file contains the **Blockchain** and **Syncer** classes.
 The **Blockchain** class acts as the mother class that unites all the other components described throughout the docs, including the Syncer. Think of it as "the power button on AppLayer's PC case" - its objective is to be the entry point of the system and act as a mediator for the other components, passing around data to each other, such as (but not limited to):
 
 * The global options singleton
+* The P2P connection manager
 * The database
 * The blockchain history/storage (for blocks and contract events)
-* The blockchain state
-* The rdPoS protocol
-* The HTTP and P2P servers
+* The blockchain state (which contains the rdPoS protocol in itself)
+* The HTTP server
+* The consensus protocol
 
 The **Syncer** class is responsible for syncing the blockchain with other nodes in the network, as well as handling proper transaction broadcasts and block creations (if the node happens to be a Validator).
 
@@ -27,9 +28,19 @@ The **Syncer** class is responsible for syncing the blockchain with other nodes 
 
 The `consensus.h` file contains the **Consensus** class - responsible for processing blocks and transactions in the blockchain and applying the network's consensus rules into them.
 
+## Database dumping
+
+The `dump.h` file contains the **Dumpable**, **DumpManager** and **DumpWorker** classes - together they are responsible for dumping the blockchain's components from memory to disk when required (e.g. blocks, transactions, contracts, the state itself, etc.)
+
+*Dumpable* is an abstraction of a dumpable object - that is, any component that inherits it is able to dump itself to disk. All classes that inherit it must implement their own dumping routine accordingly.
+
+*DumpManager* is the class that manages a list of Dumpable components in the blockchain, iterating through each of them and dumping them one by one when told to.
+
+*DumpWorker* acts as a worker thread for DumpManager, doing the actual work of dumping each Dumpable component sent by DumpManager in a separate thread. This allows for parallel dumps, speeding up the process significantly, which is important when there are many objects or particularly heavy ones (e.g. State) that need to be dumped ASAP without hanging the entire blockchain.
+
 ## rdPoS
 
-The `rdpos.h` file contains the **rdPoS** class - the implementation of the _Random Deterministic Proof of Stake_ algorithm used by the AppLayer network - as well as the **rdPoSWorker** and **Validator** classes. rdPoS is also considered a smart contract, but remains part of the AppLayer core protocol.
+The `rdpos.h` file contains the **rdPoS** class - the implementation of the *Random Deterministic Proof of Stake* algorithm used by the AppLayer network - as well as the **Validator** class. rdPoS is also considered a smart contract (it derives from **BaseContract**), but as it is an essential part of the AppLayer core protocol, it remains in the `core` folder.
 
 ## State
 
@@ -46,20 +57,10 @@ Not all functions from the class update the state. Check the [Doxygen](https://d
 
 ## Storage
 
-The `storage.h` file contains the **Storage** class - an abstraction of the blockchain's history, maintaining a collection of blocks approved and validated by the network, other nodes, or itself through time. Those blocks store transactions, contracts, accounts, and can't be altered once they're in the blockchain, only searched for or read from.
+The `storage.h` file contains the **Storage** class - an abstraction of the blockchain's history, maintaining a collection of blocks approved and validated by the network, other nodes, or itself through time. Those blocks store transactions, contracts, accounts, and can't be altered once they're in the blockchain, only searched for or read from. The file also contains the **StorageStatus** enum, used to indicate the status of a given block or transaction inside the Storage itself.
 
 On node initialization, a history of up to 1000 of the most recent blocks is loaded into memory. Those blocks were stored in a previous initialization in the database. If there are no blocks (e.g. the blockchain was just deployed and initialized for the first time), a "genesis" block is automatically created and loaded in memory.
 
 Once a block and its transactions are received from the network, they're stored in memory. If more than 1000 blocks (or 1 million transactions) are stored in memory at a given time, older blocks are periodically saved to the database. This makes the blockchain lightweight memory-wise and extremely responsive.
 
 Searching for and reading from blocks in history is done in several places in the system, so when the Storage and DB classes are working together, they act as the end point of the blockchain's operations history.
-
-## Database dumping
-
-The `dump.h` file contains the **Dumpable**, **DumpManager** and **DumpWorker** classes - together they are responsible for dumping the blockchain's components from memory to disk when required (e.g. blocks, transactions, contracts, the state itself, etc.)
-
-_Dumpable_ is an abstraction of a dumpable object - that is, any component that inherits it is able to dump itself to disk. All classes that inherit it must implement their own dumping routine accordingly.
-
-_DumpManager_ is the class that manages a list of Dumpable components in the blockchain, iterating through each of them and dumping them one by one when told to.
-
-_DumpWorker_ acts as a worker thread for DumpManager, doing the actual work of dumping each Dumpable component sent by DumpManager in a separate thread. This allows for parallel dumps, speeding up the process significantly, which is important when there are many objects or particularly heavy ones (e.g. State) that need to be dumped ASAP without hanging the entire blockchain.

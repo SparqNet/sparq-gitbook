@@ -6,9 +6,13 @@ description: A primer on how P2P messaging works in the Blockchain Development K
 
 This subchapter provides a comprehensive overview of the P2P classes and their organization within the BDK. It further elaborates on the life-cycle of a P2P connection and the dynamic flow of data between nodes. All classes described here are inside the `src/net/p2p` folder. Check their header files for full details on how each of them work.
 
+## NodeConns
+
+The `NodeConns` class (`nodeconns.h`) takes the role of maintaining and periodically updating a list of all peer nodes in the network that are connected to the local node, as well as their respective info. It is through this list that the node keeps itself up-to-date with the most recent node info possible, while also dropping stale connections/timed out peers every now and then to avoid potential network sync problems.
+
 ## Session
 
-The `Session` class (`session.h`) encapsulates a TCP connection with a remote node, responsible for managing handshakes, sending and receiving messages by reading and writing socket data. It has a queue for outbound messages, allowing any thread that is responsible for sending a message to carry on with its task without having to wait for the message transmission to complete, and serves as a base for the `ClientSession` and `ServerSession` specialized classes.
+The `Session` class (`session.h`) encapsulates a TCP connection with a remote node, responsible for managing handshakes, sending and receiving messages by reading and writing socket data. It servees for both client and server connections, having queues for both inbound and outbound messages, allowing any thread that is responsible for sending a message to carry on with its task without having to wait for the message transmission to complete.
 
 Sessions are designed to be used as `shared_ptr`s with `shared_from_this` to manage their lifecycles, as they primarily exist within the handlers of Boost's `io_context`. Once a session has successfully established a connection with a remote node, it is added to a list of sessions controlled by a manager. It is critical to properly manage those shared pointers, as the destructor of the `Session` class is intrinsically linked to the destructor of the socket, which, in turn, calls the `io_context`. If the pointer persists but its referenced `io_context` no longer exists, this will lead to a program crash.
 
@@ -16,7 +20,7 @@ For instance, functions called by the thread pool to parse asynchronous operatio
 
 ## Life cycle of a session
 
-Upon instantiation, a session's life-cycle is composed of three different routines: _handshake_, _read_ and _write_.
+Upon instantiation, a session's life-cycle is composed of three different routines: *handshake*, *read* and *write*.
 
 ### Handshake routine
 
@@ -49,31 +53,9 @@ The third routine is writing outbound messages going to the remote endpoint, lik
   * `do_write_message()` writes the full message, and calls `on_write_message()` when done
   * `on_write_message()` is a callback for when the message write process is done, locking the queue mutex, grabbing the next message from the queue, and calling `do_write_header()` again - this loop goes on until the queue is empty, where the outbound message pointer is set to null and any further callbacks from the write strand come to a halt
 
-## ClientFactory
-
-The `ClientFactory` class (`client.h`) serves as an intermediary that allows the P2P manager to instantiate and launch a new outbound client session with a given IP address and port. It does not directly manage these instances, but rather facilitates their creation and execution within an `io_context`. At present, the class operates the `io_context` across _four_ threads. We use strands to effectively manage and execute asynchronous operations within the sessions.
-
-The code snippet below, demonstrates how a new `ClientSession` is instantiated and put into operation by `ClientFactory`:
-
-```cpp
-void ClientFactory::createClientSession(const boost::asio::ip::address &address, const unsigned short &port) {
-  tcp::socket socket(this->io_context_);
-  auto session = std::make_shared<Session>(std::move(socket), ConnectionType::OUTBOUND, manager_, this->threadPool_, address, port);
-  session->run();
-}
-
-void ClientFactory::connectToServer(const boost::asio::ip::address &address, const unsigned short &port) {
-  boost::asio::post(this->connectorStrand_, std::bind(&ClientFactory::createClientSession, this, address, port));
-}
-```
-
-## Server
-
-The `Server` class (`server.h`) acts as a straightforward TCP server, listening for and creating new sessions for each incoming connection. It does not directly manage the sessions, it only focuses on accepting connections, creating corresponding sessions, and executing them within a designated `io_context`.
-
 ## ManagerBase and derivatives
 
-The P2P manager acts as the backbone of the P2P network. It bears the responsibility of managing `Session`s, the `Server`, and the `ClientFactory`, overseeing their operations and indirectly managing the `io_context`. Just like the `Session` class and its derivatives, the `ManagerBase` class (`managerbase.h`) serves as a base for the `ManagerNormal` (for Normal nodes) and `ManagerDiscovery` (for Discovery nodes) specialized classes.
+The P2P manager acts as the backbone of the P2P network. It bears the responsibility of managing `Session`s, overseeing their operations and indirectly managing the `io_context`, and serves as a base for the `ManagerNormal` (for Normal nodes) and `ManagerDiscovery` (for Discovery nodes) specialized classes.
 
 Once a `Session` has successfully completed a handshake, it is registered within the manager, which then oversees the `Session`'s lifecycle. The manager's responsibilities include maintaining a registry of active `Session`s, handling incoming and outgoing requests and responses, and maintaining the communication between them.
 
@@ -83,15 +65,22 @@ It's also important to be aware of the lifespan of the `io_context` and the obje
 
 ## Message types
 
-Every incoming message is promptly parsed by the manager via the `handleMessage()` function. These messages can fall into one of three categories: `Request`, `Response`, or `Broadcast`, and each type is handled distinctly by the manager.
+Every incoming message is promptly parsed by the manager via the `handleMessage()` function. These messages can fall into one of the following categories, with each one of them being treated distinctly:
 
-A `Request` message represents a query for specific data from another node (e.g. a list of blocks, a list of transactions, info about the node itself, etc.), while a `Response` message represents an answer to said query. Both types work together in a bidirectional flow that goes like this:
+* `Request` - a query for specific data from another node - e.g. a list of blocks, a list of transactions, info about the node itself, etc.
+* `Answer` - an answer to a given request
+* `Broadcast` - a dissemination of specific data to the network *with* possible re-broadcasting ("flooding"), such as a new block or transaction
+* `Notification` - a dissemination of specific data to the network *without* re-broadcasting, such as node info
+
+Both `Request` and `Answer` messages work together in a bidirectional flow that goes like this:
 
 * The sender node initiates a `Request` by generating a random 8-byte ID, registering it internally and sending it alongside the message
-* The receiver node receives the `Request`, its manager processes it by invoking the corresponding function to address it, formulates a `Response` with the requested data, assigns it the same ID and sends it back to the sender node
-* The sender node receives the `Response` and checks if the received ID is the same one that was registered earlier. If it is, the manager fulfills the associated `Request` future with the received `Response` and deregisters the ID. If the ID is _not_ registered, the `Response` is discarded altogether
+* The receiver node receives the `Request`, its manager processes it by invoking the corresponding function to address it, formulates an `Answer` with the requested data, assigns it the same ID and sends it back to the sender node
+* The sender node receives the `Answer` and checks if the received ID is the same one that was registered earlier. If it is, the manager fulfills the associated `Request` future with the received `Answer` and deregisters the ID. If the ID is _not_ registered, the `Answer` is discarded altogether
 
-A `Broadcast` message signals a unilateral dissemination of certain data such as a new block or transaction. This type of communication contrasts the `Request`<->`Response` bidirectional flow, as the receiver node doesn't have to answer back to the sender. Instead, it verifies the received data and adds it to its own blockchain, rebroadcasting it to other nodes if necessary.
+Both `Notification` and `Broadcast` messages, however, work with a simpler unidirectional flow, as the receiver node doesn't have to answer back to the sender. Instead, it verifies the received data and adds it to its own blockchain. The difference between both types is that `Notification` messages are never re-broadcast, while `Broadcast` messages may or may not be re-broadcast to other nodes, depending on whether said nodes had already received or not said broadcast in the past.
+
+Due to this specific condition, `Broadcast` messages are specifically handled by the `Broadcaster` class (`Broadcaster.h`), while the other types are handled by `ManagerBase` and its derivative classes.
 
 ## Asynchronous Message Parsing
 
