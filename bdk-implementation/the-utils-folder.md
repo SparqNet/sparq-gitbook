@@ -8,11 +8,9 @@ This subchapter contains a brief overview of each one of the components inside t
 
 <figure><img src="../.gitbook/assets/utils-folder.png" alt=""><figcaption></figcaption></figure>
 
-## FinalizedBlock
+## Clargs
 
-The `finalizedblock.h` file contains the **FinalizedBlock** class - an abstraction of the structure of a block sent through the network and stored in the blockchain. A finalized block is inherently *final* - it cannot be modified anymore after construction.
-
-The class only contains the bare structure and data of a block - it doesn't do any kind of operation, validation or verification on it. Having only finalized blocks across the entire project ensures block state integrity across all nodes.
+The `clargs.h` file contains a few helper functions, structs and enums to parse command-line arguments passed to the project's executables. For an executable to be aware of the argument parser, it must be registered inside the **BDKTool** enum and the executable itself must call the `parseCommandLineArgs()` function, passing the arguments in a C-style manner (argc and argv) and the respective enum value. Check the executables' source files for more info.
 
 ## ContractReflectionInterface
 
@@ -26,7 +24,7 @@ The `db.h` file contains the **DB** class - an abstraction of a [Speedb](https:/
 
 The `dynamicexception.h` file contains the **DynamicException** class - a custom exception class inherited from `std::exception` used across the whole project. It is meant to be used when there's no applicable exception from the STD library for a given error that should be caught - usually the STD library is too generic, as the project grows some exceptions may become specific to the point we need to handle them in a customized manner.
 
-## Secp256k1
+## ECDSA (Secp256k1)
 
 The `ecdsa.h` file contains the **Secp256k1** namespace - helper functions that abstract the functionalities of Bitcoin's [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) elliptic curve cryptography library, used for handling, deriving and recovering private/public keys and addresses, as well as signing and verifying signed messages.
 
@@ -35,6 +33,12 @@ The file also contains a few aliases for easier key handling, which are based on
 * **PrivKey** (same as **Hash**, or **FixedBytes<32>**) - alias for a given private key
 * **PubKey** (same as **FixedBytes<33>**) - alias for a _compressed_ public key
 * **UPubKey** (same as **FixedBytes<65>**) - alias for an _uncompressed_ public key
+
+## FinalizedBlock
+
+The `finalizedblock.h` file contains the **FinalizedBlock** class - an abstraction of the structure of a block sent through the network and stored in the blockchain. A finalized block is inherently *final* - it cannot be modified anymore after construction.
+
+The class only contains the bare structure and data of a block - it doesn't do any kind of operation, validation or verification on it. Having only finalized blocks across the entire project ensures block state integrity across all nodes.
 
 ## Hex
 
@@ -46,9 +50,9 @@ The `jsonabi.h` file contains the **JsonAbi** namespace - utility functions for 
 
 ## Logger
 
-The `logger.h` file contains the **Logger** class - a singleton responsible for logging any kind of info - and helper components such as the **Log** namespace (a namespace with predefined string names for referencing other modules), the **LogInfo** class (encapsulated log data), and the **LogType** enum (for flagging the severity of log messages).
+The `logger.h` file contains the **Logger** class - a singleton responsible for logging any kind of info - and helper components such as the **Log** namespace (a namespace with predefined string names for referencing other modules), the **LogInfo** class (encapsulated log data), and the **LogType** enum (for flagging the severity of log messages). The `Logger::logToFile()` and `Logger::logToDebug()` functions print the given details to the respective `log.txt` and `debug.txt` files inside the node's directory.
 
-The `Logger::logToFile()` and `Logger::logToDebug()` functions print the given details to the respective `log.txt` and `debug.txt` files inside the node's directory.
+The file also contains a plethora of macros to leverage the logging functions and their flags in a more "hands-on" approach, usable anywhere in the project (with a few exceptions depending on the context of where the macro is used in code). Check the Doxygen comments in the file for more info on how to use them.
 
 ## Merkle
 
@@ -75,7 +79,7 @@ For `RandomGen` to be useful, it needs to be seeded with a truly random number. 
 
 The `safehash.h` contains the **SafeHash** struct - a custom hashing implementation for use with `std::unordered_map`, replacing the one used by default in C++'s STD library, like this for example: `std::unordered_map<Hash, uint64_t, SafeHash> cachedBlocks;`.
 
-Essentially, the STD implementation of `unordered_map` uses `uint64_t` hashes, which is vulnerable to a potentially dangerous edge case where collisions could happen by having an enormous number of accounts and distributing them in a way that they have the same hash across all nodes.
+This is done because the STD implementation of `unordered_map` uses `uint64_t` hashes, which is vulnerable to a potentially dangerous edge case where collisions could happen by having an enormous number of accounts and distributing them in a way that they have the same hash across all nodes.
 
 [This article from CodeForces](https://codeforces.com/blog/entry/62393) provides a fix, which we implemented so we could continue using `std::unordered_map` normally, as it has blazing fast query times. It's not a perfect fix, since it still uses `uint64_t`, but it's better than nothing since nodes keep different hashes.
 
@@ -83,37 +87,36 @@ The file also contains the **FNVHash** struct - a custom implementation of the [
 
 ## FixedBytes and its child classes
 
-The `strings.h` file contains the **FixedBytes** template class - an abstraction of a normal `std::array` with a fixed size. For example, a `FixedBytes<10>` would have _exactly_ 10 characters in it - no more, no less. If initialized as an empty string, it will remain as a 10-character string nonetheless, with all characters set to "empty" (or `\x00` to be more exact).
+The `strings.h` file contains the **FixedBytes** template class - an abstraction of a normal `std::array` with a fixed size. For example, a `FixedBytes<10>` would have *exactly* 10 characters in it - no more, no less. If initialized as an empty string, it will remain as a 10-character string nonetheless, with all characters set to "empty" (or `\x00` to be more exact).
 
-Even though FixedBytes can be used on its own (_it's meant to store only bytes_, after all), it also serves as a base for specific classes, also declared within the same file and created with the intent of dealing with the many different ways that data strings are managed and transferred through the project in a better, less confusing and less convoluted way. They all inherit from the base FixedBytes class, applying fixed sizes of their own:
+Even though FixedBytes can be used on its own (*it's meant to store only bytes*, after all), it also serves as a base for specific classes, also declared within the same file and created with the intent of dealing with the many different ways that data strings are managed and transferred through the project in a better, less confusing and less convoluted way:
 
 * **Hash** inherits **FixedBytes<32>** and abstracts a given 32-byte hash
-* **Functor** inherits **FixedBytes<4>** and abstracts the first 4 bytes of a Solidity function's keccak hash
+* **Functor** abstracts the first 4 bytes of a Solidity function's keccak hash, but does not inherit **FixedBytes** directly - instead it opts for a more practical approach and just treats those bytes as a `uint32_t`
 * **Signature** inherits **FixedBytes<65>** and abstracts a given full ECDSA signature (r, s and v)
 * **Address** inherits **FixedBytes<20>** and abstracts a given 20-byte address
-* **StorageKey** inherits **FixedBytes<52>** and abstracts an EVM storage key (address + slot key)
+* **StorageKey** inherits **FixedBytes<52>** and abstracts an EVM storage key (20 bytes address + 32 bytes slot key)
 
 ## TxBlock and TxValidator
 
-The `tx.h` file contains the **TxBlock** and **TxValidator** classes - abstractions for a block transaction and a Validator transaction, respectively. The implementation logic and details for transactions within AppLayer are derived from the "Account" model, used by Ethereum and implemented by the [Aleth](https://github.com/ethereum/aleth) library, which is different from the "UTXO" model used by Bitcoin.
+The `tx.h` file contains the **TxBlock** and **TxValidator** classes - abstractions for a block transaction and a Validator transaction, respectively. The implementation logic and details for those transactions are derived from the "Account" model, used by Ethereum and implemented by the [Aleth](https://github.com/ethereum/aleth) library, which is different from the "UTXO" model used by Bitcoin.
 
 ## Utils
 
-The `utils.h` file contains the **Utils** namespace - a place for more generalized miscellaneous utility functions, namespaces, enums and typedefs used throughout the BDK.
+The `utils.h` file contains the **Utils** namespace - a place for generalized miscellaneous utility functions, namespaces, enums and typedefs used across the BDK.
 
 This list is only an example and does not reflect the entire contents of the file. We suggest you read the [Doxygen](https://doxygen.nl/) docs for more info about the class:
 
-* Aliases for working with:
-  * Raw-byte strings (`Byte`,`Bytes`, `BytesArr`, `BytesArrView`), as well as helper functions for converting and/or manipulating them (e.g. `appendBytes()`)
-  * Unsigned integer types (`uintX_t`, `SafeUintX_t`)
+* Helper functions that deal with printing (`safePrint()`, `safePrintTest()`, `printXYZ()`, etc.)
+* Aliases for working with integer types (`intX_t`, `uintX_t`, `SafeIntX_t`, `SafeUintX_t`), raw-byte strings (`Byte`,`Bytes`, `BytesArr`, `BytesArrView`), and helper functions for converting and/or manipulating them (e.g. `appendBytes()`, `uintXToBytes()`, `bytesToUintX()`, `bytesToString()`, `stringToBytes()`, etc.)
 * A map with addresses for Protocol Contracts (e.g. `rdPoS` and `ContractManager`)
 * Enums for network types (`Networks`), contract function types (`FunctionTypes`) and contract types (`ContractType`)
 * The `Account` struct, used to maintain account balance and nonce statuses, as well as contract-specific data (if the account represents a contract)
 * A wrapper for a pointer that ensures the pointer is never null (`NonNullUniquePtr`), as well as a wrapper for a pointer that forcefully nullifies it on destruction (`PointerNullifier`)
 * The `EventParam` struct, used for abstracting a contract event parameter
-* `safePrint()`, used to print details to the node's terminal (which can be checked by attaching a tmux session to it)
+* Several templated helper functions that deal with tuples, as well as helper functions that deal with Functors
 * The `sha3()` function, used extensively as the primary hash function for the entire project
-* Functions that convert byte strings to unsigned integers and vice-versa (e.g. `uint256ToBytes()` and `bytesToUint256()`), as well as raw byte strings to normal string and vice-versa (e.g. `bytesToString()` and `stringToBytes()`)
+* The `randBytes()` function, used extensively as a random bytes string generator
 * `padLeft()` and `padRight()`, used for adding padding to strings at their left and right sides, respectively
 * `padLeftBytes()` and `padRightBytes()`, same as above, but specifically for use with raw byte strings
 * `toLower()` and `toUpper()`, used for converting strings to all-lower and all-upper case, respectively

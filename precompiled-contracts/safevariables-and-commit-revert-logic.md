@@ -33,15 +33,14 @@ For Protocol Contracts, that's most of the required context. Dynamic Contracts, 
 
 All SafeVariables inherit from the `SafeBase` class, which adhere to the following rules:
 
-* Have two internal variables: one for the original value and another that is a pointer to a temporary value
-* Must override the `check()`, `commit()`, and `revert()` functions
-  * `check()` should verify if the temporary value is `nullptr`; if it is, it should set the temporary value to the original value
-  * `commit()` should copy the temporary value to the original value
-  * `revert()` should set the temporary value to `nullptr`
+* Have two internal variables: one for the current/original value and another for the previous/temporary value
+  * Optionally, if required, an undo stack for dealing with more complex variables such as containers
+* Must override the `commit()`, and `revert()` functions
+  * `commit()` should keep the current value as-is and either discard the previous one or equal it to the current, depending on the implementation details
+  * `revert()` should do the opposite - discard the current value and set it back to the previous one (also applying the undo stack if it has one, again, depending on the implementation details)
 * Must be declared as *private* within contracts and initialized with `this` as the parameter - this enables the SafeVariable to mark itself as used in the `ContractManager`, allowing proper reversion of changes made to the contract
-* Must call `check()` and return the temporary value (or reference to the temporary value)
-* If non-`const`, must call `markAsUsed()` when accessed, allowing the contract to properly register the variable as used within the function call, and properly revert or commit changes made to the contract accordingly
-* When initialized with values in a contract's constructor, must call `commit()` followed by `enableRegister()` so the commit/revert functionality can actually work
+* Must call `markAsUsed()` on any and all non-`const` functions that it has (including ones that don't actually change the value), allowing the contract to properly register the variable as used within the function call, and properly revert or commit changes made to the contract accordingly
+* When initialized with values in a contract's constructor, must call `commit()` followed by `enableRegister()` so the commit/revert functionality can actually work (see existing contracts for more info)
 
 ## Types of SafeVariables
 
@@ -56,23 +55,10 @@ We provide the following SafeVariable types, fully functional and ready for use 
 * `SafeUnorderedMap` - abstracts a mapping
 * `SafeVector` - abstracts a vector
 
-## Caveats with safe containers
+### Caveats
 
-Containers have some exceptions to these rules. Copying the entire container would be prohibitively expensive, so only accessed values are copied to the temporary container. This means they do not behave like regular containers, requiring developers to exercise caution when using iterators or looping through them.
+Some specific non-`const` functions from certain SafeVars are NOT considered "safe" at the moment - this means commit/revert logic does NOT work properly on them due to implementation issues. We advise caution for now if you want to use them, preferably in a read-only manner (as in, do not alter the value itself if using one of those):
 
-Our `SafeUnorderedMap` variable allows limited looping through the container. This limitation is due to the inability to access both the original and temporary containers simultaneously; you can only access one at a time. It is recommended to loop through a container within a `const` function, as this will not modify the temporary container.
-
-`SafeUnorderedMap` includes the following functions for looping through both containers:
-
-| Function   | Description                                                          | Return type     |
-| ---------- | -------------------------------------------------------------------- | --------------- |
-| cbegin()   | Returns a const iterator to the beginning of the original container  | const\_iterator |
-| cend()     | Returns a const iterator to the end of the original container        | const\_iterator |
-| begin()    | Returns a const iterator to the beginning of the temporary container | iterator        |
-| end()      | Returns a const iterator to the end of the temporary container       | iterator        |
-| empty()    | Returns true both the original and temporary container is empty      | bool            |
-| size()     | Returns the size of the original container                           | size\_type      |
-| tempSize() | Returns the size of the temporary container                          | size\_type      |
-
-Keep in mind that the temporary and original containers are not the same, so duplicates within `size()` and `tempSize()` are possible.
-
+* `SafeUnorderedMap::find()`
+* `SafeUnorderedMap::begin()`
+* `SafeUnorderedMap::end()`

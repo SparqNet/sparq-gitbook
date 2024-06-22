@@ -16,8 +16,6 @@ This is only an overview, check the [Doxygen](https://doxygen.nl) docs for more 
 
 The **Types** enum contains the supported Solidity data types in the ABI. Each value has an intrinsic equivalency with both the Solidity data type and the native C++ data type that it represents.
 
-TODO: gone? -> **BaseTypes** is a `std::variant` declared in `src/utils/utils.h` that abstracts all of the types in one typedef, for easier handling.
-
 Replace the **X** in "uintX" and "intX" with the desired size number. The ABI supports every size from 8 to 256 (inclusive), in multiples of 8 (e.g. 8, 16, 24, 32, 40, 48, ..., until 256) - in other words, `x <= 256 && x % 8 == 0`. **Enums are encoded as uint8**.
 
 |    Enum    |  Solidity  |            C++            |
